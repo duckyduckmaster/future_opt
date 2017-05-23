@@ -1,0 +1,154 @@
+read trait Expr
+  require def eval() : Expr
+  def Val() : Maybe[int]
+    Nothing
+  end
+  def Var() : Maybe[String]
+    Nothing
+  end
+  def Neg() : Maybe[Expr]
+    Nothing
+  end
+  def Add() : Maybe[(Expr, Expr)]
+    Nothing
+  end
+  def Sub() : Maybe[(Expr, Expr)]
+    Nothing
+  end
+end
+read trait Unary
+  require val operand : Expr
+end
+read trait Binary
+  require val left : Expr
+  require val right : Expr
+end
+class Value : Expr(value)
+  val value : int
+  def init(value : int) : unit
+    this.value = value
+  end
+  def Val() : Maybe[int]
+    Just(this.value)
+  end
+  def eval() : Expr
+    new Value(this.value)
+  end
+end
+class Variable : Expr(id)
+  val id : String
+  def init(id : String) : unit
+    this.id = id
+  end
+  def Var() : Maybe[String]
+    Just(this.id)
+  end
+  def eval() : Expr
+    new Variable(this.id)
+  end
+end
+
+class Negation : Expr(operand) + Unary
+  val operand : Expr
+  def init(operand : Expr) : unit
+    this.operand = operand
+  end
+  def Neg() : Maybe[Expr]
+    Just(this.operand)
+  end
+  def eval() : Expr
+    val this' = new Negation(this.operand.eval())
+    match this' with
+      case Neg(Val(v)) =>
+        new Value(-(v))
+      end
+      case Neg(Neg(e)) =>
+        e
+      end
+      case e =>
+        e
+      end
+
+    end
+  end
+end
+class Addition : Expr(left, right) + Binary
+  val left : Expr
+  val right : Expr
+  def init(left : Expr, right : Expr) : unit
+    this.left = left
+    this.right = right
+  end
+  def Add() : Maybe[(Expr, Expr)]
+    Just((this.left, this.right))
+  end
+  def eval() : Expr
+    val this' = new Addition(this.left.eval(), this.right.eval())
+    match this' with
+      case Add(Val(0), r) =>
+        r
+      end
+      case Add(l, Val(0)) =>
+        l
+      end
+      case Add(l, Neg(e)) =>
+        (new Subtraction(l, e)).eval()
+      end
+      case Add(Val(l), Val(r)) =>
+        new Value(l + r)
+      end
+      case e =>
+        e
+      end
+
+    end
+  end
+end
+class Subtraction : Expr(left, right) + Binary
+  val left : Expr
+  val right : Expr
+  def init(left : Expr, right : Expr) : unit
+    this.left = left
+    this.right = right
+  end
+  def Sub() : Maybe[(Expr, Expr)]
+    Just((this.left, this.right))
+  end
+  def eval() : Expr
+    val this' = new Subtraction(this.left.eval(), this.right.eval())
+    match this' with
+      case Sub(Val(0), r) =>
+        (new Negation(r)).eval()
+      end
+      case Sub(l, Val(0)) =>
+        l
+      end
+      case Sub(l, Neg(e)) =>
+        (new Addition(l, e)).eval()
+      end
+      case Sub(Val(l), Val(r)) =>
+        new Value(l + r)
+      end
+      case e =>
+        e
+      end
+
+    end
+  end
+end
+active class Main
+  def main() : unit
+    val zero = new Value(0)
+    val two = new Value(2)
+    val minusTwo = new Negation(new Value(2))
+    val three = new Value(3)
+    val x = new Variable("x")
+    val e = new Subtraction(x, new Addition(two, minusTwo))
+    match e.eval() with
+      case Var(x) =>
+        println("Simplified to '{}'", x)
+      end
+
+    end
+  end
+end

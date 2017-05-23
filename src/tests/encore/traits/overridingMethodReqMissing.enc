@@ -1,0 +1,26 @@
+local trait T
+  require val f : int
+  def foo() : int
+    this.f
+  end
+end
+class Foo : T(g)
+  var f : int
+  var g : int
+  def init(f : int, g : int) : unit
+    this.f = f
+    this.g = g
+  end
+  def m() : int
+    this.g
+  end
+  def foo() : int
+    this.f + this.m()
+  end
+end
+active class Main
+  def main() : unit
+    val x = new Foo(2, 3) : T
+    println("Five = {}", x.foo())
+  end
+end

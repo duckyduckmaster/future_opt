@@ -1,0 +1,19 @@
+-- This file was automatically converted by encorec
+
+import Task
+fun doubles(x : int) : int
+  x * 2
+end
+active class Main
+  def main() : unit
+    repeat i <- 5 do
+      async
+        let
+          s = doubles(i)
+        in
+          println(doubles(s) % 2)
+        end
+      end
+    end
+  end
+end

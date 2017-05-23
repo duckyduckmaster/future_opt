@@ -1,0 +1,33 @@
+active class Main
+  def main() : unit
+    val t = new Test()
+    t ! run1()
+  end
+end
+
+active class Producer
+  def foo(t : Test) : int
+    get(t ! run2())
+    17
+  end
+end
+
+active class Test
+  val p : Producer
+
+  def init() : unit
+    this.p = new Producer
+  end
+
+  def run2() : unit
+    print("While awaiting\n")
+  end
+
+  def run1() : unit
+    val f = this.p ! foo(this)
+    print("Before await\n")
+    this.await(f)
+    print("After await\n")
+    print("{}\n", get(f))
+  end
+end

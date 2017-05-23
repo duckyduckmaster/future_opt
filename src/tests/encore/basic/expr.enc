@@ -1,0 +1,27 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    println(this.foo())
+    if this.bar(this.foo()) == 2 then
+      this.baz(0)
+      this.baz(1)
+    else
+      println("oops")
+    end
+  end
+  def foo() : String
+    "Hello"
+  end
+  def bar(f : String) : int
+    println("Ponyworld!")
+    2
+  end
+  def baz(b : int) : unit
+    println(if b == 0 then
+              "Hello"
+            else
+              "Ponyworld!"
+            end)
+  end
+end

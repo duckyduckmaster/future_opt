@@ -1,0 +1,26 @@
+read trait Foo
+  def foo() : unit
+    println("In Foo")
+  end
+end
+read trait Bar
+  def foo() : unit
+    println("In Bar")
+  end
+end
+read trait Baz
+end
+class C1 : Foo + Baz
+end
+class C2 : Bar + Baz
+end
+active class Main
+  def main() : unit
+    val x = if true then
+              new C1
+            else
+              new C2
+            end
+    x.foo()
+  end
+end

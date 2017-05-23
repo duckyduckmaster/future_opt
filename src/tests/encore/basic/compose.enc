@@ -1,0 +1,16 @@
+-- This file was automatically converted by encorec
+
+fun compose(g : int -> int, f : int -> int) : int -> int
+  fun (x : int) => g(f(x))
+end
+active class Main
+  def main() : unit
+    let
+      double = fun (x : int) => x * 2
+      bump = fun (x : int) => x + 1
+      f = compose(double, bump)
+    in
+      println(f(3))
+    end
+  end
+end

@@ -1,0 +1,7 @@
+-- This file was automatically converted by encorec
+
+module ModuleOnTheRight
+import TokenModule
+fun receiveToken(x : Token) : unit
+  x.foo()
+end

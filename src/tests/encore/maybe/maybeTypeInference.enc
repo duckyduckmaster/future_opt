@@ -1,0 +1,29 @@
+-- This file was automatically converted by encorec
+
+fun foo() : (Maybe[int], Maybe[int])
+  if false then
+    Nothing
+  else
+    Just(Just(42))
+  end
+  if true then
+    if false then
+      (Just(42), Nothing : Maybe[int])
+    else
+      (Nothing, Just(42))
+    end
+  else
+    (Nothing, Nothing)
+  end
+end
+active class Main
+  def main() : unit
+    match foo() with
+      case (Nothing, Just(x)) =>
+        println(x)
+      end
+
+    end
+    println("Done!")
+  end
+end

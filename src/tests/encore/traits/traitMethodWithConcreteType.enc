@@ -1,0 +1,28 @@
+fun showBar(b : Bar[String]) : unit
+  println(b.bar())
+end
+local trait Foo[t]
+  require var x : t
+  def getX() : t
+    this.x
+  end
+end
+local trait Bar[t]
+  require def bar() : t
+end
+class C : Foo[int] + Bar[String]
+  var x : int
+  def init() : unit
+    this.x = 42
+  end
+  def bar() : String
+    "bar"
+  end
+end
+active class Main
+  def main() : unit
+    val c = new C()
+    println(c.getX())
+    showBar(c)
+  end
+end

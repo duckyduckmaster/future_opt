@@ -1,0 +1,6 @@
+-- This file was automatically converted by encorec
+
+typedef B = Maybe[A]
+typedef A = B
+class C : A
+end

@@ -1,0 +1,168 @@
+#!/bin/bash
+#
+# Main test script. Each directory under encore/src/tests is a test suite. Test
+# suites can contain nested directories (i.o.w: nested test suites).
+#
+# See README.md for usage.
+
+source bin/test_lib.sh
+
+function present_results() {
+    readonly local TMP_DIR=$1
+
+    readonly local CNT_FAIL=$(find "${TMP_DIR}" -name '*.FAILED' | wc -w | tr -d ' ')
+
+    if [ ${CNT_FAIL} == "0" ]; then
+      if [ -e ${TMP_DIR}/test_counts.log ]; then
+        echo "ALL TESTS PASSED"
+        cat /${TMP_DIR}/test_counts.log | grep -v "0/0"
+        true
+      else
+        echo "NO TESTS FOUND"
+        false
+      fi
+    else
+      for FAILED in $(find ${TMP_DIR} -name '*.FAILED'); do
+          echo ">>> FAILED TEST: $(basename ${FAILED%.FAILED}):"
+          cat ${FAILED} | sed "s/\(.*\)/     | \1/"
+      done
+
+      echo "SUMMARY:"
+      cat /${TMP_DIR}/test_counts.log | grep -v "0/0"
+
+      echo "TOTAL TESTS FAILED: ${CNT_FAIL}"
+
+      if which tree > /dev/null; then
+          tree --noreport ${TMP_DIR} -P '*.FAILED' | tail -n +2 | sed "s/\(.*\)/  \1/" | sed "s/\.FAILED/ -- failed/"
+      else
+          find "${TMP_DIR}" -name '*.FAILED' | sed "s#${TMP_DIR}##" | sed "s/\/*\(.*\).FAILED$/ - test \1 failed/"
+      fi
+      false
+    fi
+}
+
+############################################################
+#
+# Runs all test suites. Optionally filters the test suites to be run using a
+# regex.
+#
+# Arguments:
+#
+#  1. The name of the test (no file extension), relative to the current working
+#     directory.
+#
+#  2. DO_SEQ: empty string for parallel execution of tests, non empty for
+#     sequential execution.
+#
+#  3. DO_TIMING: empty string for not using timing, non empty for enabling
+#     timing.
+#
+# Returns:
+#  None
+#
+############################################################
+function test() {
+  readonly local TEST_DIR=$(mktemp -d "/tmp/test_results_XXXXXX")
+  local TEST_REG=$1
+  readonly local DO_SEQ=$2
+  readonly local DO_TIMING=$3
+
+  if [ -z "$TEST_REG" ]; then
+    TEST_REG="."
+  fi
+
+  if [ ! -d "${TEST_REG}" -a ! -f "${TEST_REG}.enc" ]; then
+    echo "ERROR: ${TEST_REG} is neither a test suite nor a test name"
+    fail_with_usage
+  fi
+
+  if [ -d ${TEST_REG} ]; then
+    if [ "${DO_SEQ}" = "--do_seq" ]; then
+      for SUITE in $(find ${TEST_REG} -name "*.enc" -exec dirname '{}' \; | sort | uniq); do
+        bin/run_test_suite.sh "${SUITE} ${TEST_DIR} ${TEST_REG} ${DO_TIMING}"
+      done
+    else
+      for SUITE in $(find ${TEST_REG} -name "*.enc" -exec dirname '{}' \; | sort | uniq); do
+        echo "${SUITE} ${TEST_DIR} ${TEST_REG} ${DO_TIMING}"
+      done | parallel bin/run_test_suite.sh
+    fi
+
+    present_results ${TEST_DIR}
+    readonly local RET=$?
+    rm -rf ${TEST_DIR}
+    return $RET
+  else
+    if [ -f ${TEST_REG} -o -f ${TEST_REG}.enc ]; then
+      # TEST_REG is a single test suite
+        # run a single test
+      if ! test_enabled ${TEST_REG}; then
+        echo "TEST IS DISABLED"
+        return $(false)
+      fi
+      local readonly OUT=$(run_test ${TEST_REG})
+      if (echo ${OUT} | grep "ERROR" > /dev/null); then
+        echo "FAILED"
+        echo "${OUT}"
+        rm -rf ${TEST_DIR}
+        return $(false)
+      else
+        echo "SUCCESS"
+        rm -rf ${TEST_DIR}
+        return $(true)
+      fi
+    fi
+  fi
+}
+
+
+function fail_with_usage() {
+    echo -e "usage: bin/test [test-suite-regex] [--do_seq | --stress]"
+    echo -e "test-suite-regex:\t specify a directory containing a test suite to run (relative to src/tests)"
+    echo -e "        --do_seq:\t force running tests sequentially"
+    echo -e "        --stress:\t run stress tests/benchmarks, implies --do_seq"
+    exit 1
+}
+
+TEST_REGEX=""
+DO_SEQ_FLAG=""
+DO_TIMING=""
+
+if [ $# -gt 3 ]; then
+    echo "ERROR: too many arguments"
+    fail_with_usage
+fi
+
+while (($#)) ; do
+  if [ "$1" = "--do_seq" ] ; then
+    DO_SEQ_FLAG="$1"
+  elif [ "$1" = "--stress" ] ; then
+      DO_SEQ_FLAG="--do_seq"
+      TEST_REGEX="stress"
+      DO_TIMING="--stress"
+  else
+    if [ "$TEST_REGEX" = "" ] ; then
+      TEST_REGEX=$1
+    else
+      echo "ERROR: Several test-suite-regexs given: $TEST_REGEX and $1"
+      fail_with_usage
+    fi
+  fi
+  shift
+done
+
+if [ "$TEST_REGEX" = "" ] ; then
+  #do not run the stress tests/benchmarks if no test regex is given:
+  TEST_REGEX="encore"
+fi
+
+if [ "$DO_SEQ_FLAG" = "--do_seq" ] ; then
+  echo "running tests sequentially"
+else
+  #run in parallel, if GNU parallel is available
+  if [ -z "$(which parallel)" ] ; then
+    echo "WARNING: GNU parallel not installed; running tests sequentially (slow)"
+    echo "WARNING: install using 'brew install parallel' (OS X), or 'sudo apt-get install parallel' (ubuntu, etc.)"
+    DO_SEQ_FLAG="--do_seq"
+  fi
+fi
+test "${TEST_REGEX}" "${DO_SEQ_FLAG}" "${DO_TIMING}"

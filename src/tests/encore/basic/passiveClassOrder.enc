@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+read class Foo
+  def foo() : Bar
+    new Bar
+  end
+end
+read class Bar
+end
+active class Main
+  def main() : unit
+    println("Hello, ponyworld!")
+  end
+end

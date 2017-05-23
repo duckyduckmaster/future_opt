@@ -1,0 +1,11 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    if true then
+      Nothing
+    else
+      Nothing
+    end
+  end
+end

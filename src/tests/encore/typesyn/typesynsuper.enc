@@ -1,0 +1,16 @@
+typedef E = D
+typedef D = T
+local trait T
+end
+class C : D
+end
+active class Main
+  def main() : unit
+    let
+      x = new C : D
+      y = new C : E
+    in
+      println("ooo")
+    end
+  end
+end

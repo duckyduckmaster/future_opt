@@ -1,0 +1,8 @@
+module InfiniteImport
+import InfiniteImport
+
+active class Main
+  def main() : unit
+    println(42)
+  end
+end

@@ -1,0 +1,51 @@
+-- This file was automatically converted by encorec
+
+fun id[a](item : a) : a
+  item
+end
+fun compose[s, t, u](f : s -> t, g : t -> u) : s -> u
+  fun (x : s) => g(apply(f, x))
+end
+fun apply[a, b](fn : a -> b, x : a) : b
+  fn(x)
+end
+fun pSingleArgument[t](arg1 : t, arg2 : int, arg3 : t) : t
+  arg3
+end
+fun pRecursiveCall[t](arg1 : t, counter : int) : Maybe[t]
+  if counter == 0 then
+    Just(arg1)
+  else
+    pRecursiveCall(arg1, counter - 1)
+  end
+end
+fun helperForNestedFunction[a](x : a) : a
+  x
+end
+fun pNestedFunction[t](x : t) : t
+  helperForNestedFunction(x)
+end
+active class Main
+  def main() : unit
+    val test1 = pSingleArgument("test single argument", 42, "single")
+    println(test1)
+    val pNested = pNestedFunction("test passing parametric type between parametric functions")
+    println(pNested)
+    let
+      testRecursiveName = "test calling function recursively"
+      pRecursive = pRecursiveCall(testRecursiveName, 20)
+    in
+      match pRecursive with
+        case Just(result) =>
+          println(result)
+        end
+        case Nothing =>
+          print("Error in function pRecursiveCall, expected output: '{}'", testRecursiveName)
+        end
+
+      end
+    end
+    val compFn = compose(id[String], id[String])
+    println(compFn("42"))
+  end
+end

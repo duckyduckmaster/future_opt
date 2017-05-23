@@ -1,0 +1,13 @@
+module RecurseA
+
+import RecurseB
+
+fun foo() : int
+  11
+end
+
+active class Main
+  def main() : unit
+    println("In RecurseA")
+  end
+end

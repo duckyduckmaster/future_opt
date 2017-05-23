@@ -1,0 +1,16 @@
+-- This file was automatically converted by encorec
+
+local class Foo
+  def foo() : int
+    local()
+  where
+    fun local() : int
+      this.foo()
+    end
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

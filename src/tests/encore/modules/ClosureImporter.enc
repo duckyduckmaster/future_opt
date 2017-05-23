@@ -1,0 +1,8 @@
+-- This file was automatically converted by encorec
+
+import ClosureImp
+active class Main
+  def main() : unit
+    println((new Foo).bar())
+  end
+end

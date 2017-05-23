@@ -1,0 +1,22 @@
+read trait Animal
+end
+class Dog : Animal
+end
+class Cat : Animal
+end
+local class Container[t]
+  var cell : t
+  def set(x : t) : unit
+    this.cell = x
+  end
+end
+active class Main
+  def main() : unit
+    let
+      dogContainer = new Container[Dog]
+      animalContainer = dogContainer : Container[Animal]
+    in
+      animalContainer.set(new Cat)
+    end
+  end
+end

@@ -1,0 +1,41 @@
+-- This file was automatically converted by encorec
+
+import ParT.ParT
+fun toUpperAndSmall(s : String) : Par[String]
+  liftv(s.to_upper()) ||| liftv(s)
+end
+fun printUpper(s : String) : unit
+  println(s.to_upper())
+end
+fun generateMillionItems(var p : Par[int]) : Par[int]
+  for i <- [1..10000000] do
+    p = p ||| liftv(1)
+  end
+  p
+end
+active class Test
+  def producer() : String
+    "producer"
+  end
+  def one() : int
+    0
+  end
+end
+active class Main
+  def testBindAndFilter() : unit
+    let
+      fut = new Test ! producer()
+      p = empty[String]() ||| liftv("Test") ||| liftv("Quick") ||| liftv("Encore") ||| liftf(fut)
+      filteredP = filter[String](fun (s : String) => s.contains("k") || s.contains("prod"), p)
+      bindP = bind[String, String](toUpperAndSmall, filteredP)
+    in
+      for s <- extract(bindP) do
+        println(s)
+      end
+    end
+  end
+  def main() : unit
+    print("testBindAndFilter()\n")
+    this.testBindAndFilter()
+  end
+end

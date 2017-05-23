@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  var count : int
+  def main() : unit
+    println("Hello Ponyworld!")
+    this.count = this.count - 1
+    this.count = this.count - 1
+    this.count = this.count - 1
+    this.count = this.count - 1
+    this.count = this.count - 1
+    println(this.count)
+  end
+end

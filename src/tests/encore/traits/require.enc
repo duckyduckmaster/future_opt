@@ -1,0 +1,28 @@
+read trait T
+  require def foo(x : int) : int
+  def bar() : int
+    this.foo(42)
+  end
+end
+read trait U[t]
+  require def fr0b() : t
+end
+class C : T + U[T]
+  def foo(y : int) : int
+    y
+  end
+  def fr0b() : C
+    new C
+  end
+end
+active class Main
+  def main() : unit
+    let
+      c = new C
+      u = c : U[T]
+    in
+      println(c.bar())
+      println(u.fr0b().bar())
+    end
+  end
+end

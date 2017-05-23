@@ -1,0 +1,108 @@
+read class IntContainer
+  val elem : int
+
+  def init(x : int) : unit
+    this.elem = x
+  end
+
+  def Even() : Maybe[int]
+    if this.elem % 2 == 0 then
+      Just(this.elem)
+    else
+      Nothing : Maybe[int]
+    end
+  end
+
+  def Odd() : Maybe[int]
+    if this.elem % 2 == 1 then
+      Just(this.elem)
+    else
+      Nothing : Maybe[int]
+    end
+  end
+end
+
+local class Container[t]
+  val elem : t
+
+  def init(elem : t) : unit
+    this.elem = elem
+  end
+
+  -- Defines an object pattern
+  def This() : Maybe[Container[t]]
+    Just(this)
+  end
+end
+
+read trait Letter
+  require def Letter() :  Maybe[String]
+end
+
+read class A : Letter
+  def Letter() :  Maybe[String]
+    Just("A")
+  end
+end
+
+read class B :  Letter
+  def Letter() :  Maybe[String]
+    Just("B")
+  end
+end
+
+read class Foo
+  def AlwaysMatchingExtractor() : Maybe[unit]
+    Just(())
+  end
+end
+
+active class Main
+  def objectPatternTestWithFailingGuard() : unit
+    match new Container[String]("foobar") with
+      case _ when false => println("baaaad")
+      case This(This(This(This(c)))) => println(c.elem)
+    end
+  end
+
+  def valueVariableTuplePatternsTestWithFailingGuard() : unit
+    match (1, 2, "123") with
+      case (a, b, "123") when a > b => println("nope")
+      case (1, b, "123") => println("{}{}123", 1, b)
+    end
+  end
+
+  def evaluatesToTraitTest() : Letter
+    -- Just to test the typechecker
+    match 1 with
+      case 2 => new A() : Letter
+      case 1 => new B()
+    end
+  end
+
+  -- Issue #427, this should compile!
+  def variablePatternAgainstLambda() : unit
+    let f = fun (x : int) => x in
+      match f with
+        case x => println("foo")
+      end
+    end
+  end
+
+  -- Very closely related to issue #521
+  def testEmptyExtractors(): unit
+    match new Foo with
+      case AlwaysMatchingExtractor() => println("good")
+      case _ => println("bad")
+    end
+  end
+
+
+  def main() : unit
+    this.objectPatternTestWithFailingGuard()
+    this.valueVariableTuplePatternsTestWithFailingGuard()
+    this.evaluatesToTraitTest()
+    this.variablePatternAgainstLambda()
+    this.testEmptyExtractors()
+  end
+end

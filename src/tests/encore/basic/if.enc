@@ -1,0 +1,15 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    this.stuff(0)
+    this.stuff(1)
+  end
+  def stuff(i : int) : unit
+    if i == 0 then
+      println("Hello")
+    else
+      println("Ponyworld!")
+    end
+  end
+end

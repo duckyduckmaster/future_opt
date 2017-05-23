@@ -1,0 +1,5 @@
+-- This file was automatically converted by encorec
+
+fun foo[int]() : unit
+  ()
+end

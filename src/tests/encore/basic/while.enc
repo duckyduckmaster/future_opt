@@ -1,0 +1,11 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    var i = 3
+    while i > 0 do
+      println("Hello Ponyworld!")
+      i = i - 1
+    end
+  end
+end

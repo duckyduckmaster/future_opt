@@ -1,0 +1,12 @@
+-- This file was automatically converted by encorec
+
+import List
+fun getList() : List
+  new List
+end
+active class Main
+  def main() : unit
+    getList()
+    print("Done")
+  end
+end

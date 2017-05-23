@@ -1,0 +1,115 @@
+import ParT.ParT
+
+fun show_string(x : String) : unit
+  if x.equals(primitive_const()) then
+    print("{}: OK\n", x)
+  else
+    print("{} vs {}: ERROR\n", x, primitive_const())
+  end
+end
+
+fun show_passive(x : String) : unit
+  if x.equals(passive_const()) then
+    print("{}: OK\n", x)
+  else
+    print("{}: ERROR\n", x)
+  end
+end
+
+fun primitive_const() : String
+  "Liftf Primitive Test"
+end
+
+fun passive_const() : String
+  "Liftf Passive Test"
+end
+
+read class PassiveTest
+  val elem : String
+  def init(s : String) : unit
+    this.elem = s
+  end
+end
+
+active class StringChecker
+  var primitive : bool
+  var passiv : bool
+  var prim_string : String
+  var pass_string : String
+
+  def init() : unit
+    this.primitive = false
+    this.passiv = false
+  end
+
+  def deterministicOutput(s : String) : unit
+    let
+      p = primitive_const()
+      pa = passive_const()
+    in
+      if s.equals(p) then
+        this.primitive = true
+        this.prim_string = s
+      else
+        if s.equals(pa) then
+          this.passiv = true
+          this.pass_string = s
+        else
+          print("ERROR: expecting '{}' or '{}' but got {}", p, pa, s)
+        end
+      end
+      if this.primitive && this.passiv then
+        show_string(this.prim_string)
+        show_passive(this.pass_string)
+      end
+    end
+  end
+end
+
+active class Test
+  var passiveTest : PassiveTest
+  var output : [String]
+
+  def init(s : String) : unit
+    this.passiveTest = new PassiveTest(s)
+  end
+
+  def get_string() : String
+    this.passiveTest.elem
+  end
+
+  def get_pasive() : PassiveTest
+    this.passiveTest
+  end
+end
+
+active class Main
+  def test_primitive_liftf(m : StringChecker) : unit
+    let
+      testContentFuture = new Test("Liftf Primitive Test")
+      primitive_par = liftf(testContentFuture ! get_string())
+    in
+      primitive_par >> fun (s : String) => m ! deterministicOutput(s)
+    end
+  end
+
+  def test_passive_liftf(m : StringChecker) : unit
+    let
+      test = new Test("Liftf Passive Test")
+      passive_par = liftf(test ! get_pasive())
+    in
+      passive_par >> fun (t : PassiveTest)
+                       t.elem
+                     end >> fun (s : String) => m ! deterministicOutput(s)
+    end
+  end
+
+  def main() : unit
+    let
+      master = new StringChecker
+    in
+      this.test_primitive_liftf(master)
+      this.test_passive_liftf(master)
+    end
+  end
+end

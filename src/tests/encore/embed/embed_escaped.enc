@@ -1,0 +1,40 @@
+-- This file was automatically converted by encorec
+
+local class Foo
+  var f : int
+end
+active class Main
+  var f : int
+  def main() : unit
+    val x = new Foo()
+    val y = EMBED (int)
+              #{EMBED (int)
+                  #{EMBED (int)
+                      21;
+                    END};
+
+                END};
+
+            END
+    val z = 0
+    EMBED (unit)
+      int x = #{y}+ 21;
+      #{x.f}= x;
+      #{z}= #{x.f};
+      #{let
+          z' = x.f
+        in
+          assertTrue(z == z')
+        end};
+
+    END
+    EMBED (unit)
+      #{EMBED (unit)
+          #{this.f = 42};
+
+        END};
+
+    END
+    println("Embedding is cool: {}", this.f)
+  end
+end

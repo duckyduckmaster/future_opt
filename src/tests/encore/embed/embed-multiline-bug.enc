@@ -1,0 +1,19 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      result = EMBED (int)
+                 printf("Hello, world!\n");
+      27;
+
+               END
+    in
+      if result == 27 then
+        println("Test OK")
+      else
+        println("Test failed")
+      end
+    end
+  end
+end

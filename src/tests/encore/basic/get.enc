@@ -1,0 +1,31 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      failures = 0
+      successes = 0
+    in
+      repeat i <- 1 do
+        (new Test)!run()
+      end
+    end
+  end
+end
+active class Test
+  def run() : unit
+    let
+      p = new Producer
+    in
+      println(get(get(p ! produce())))
+    end
+  end
+end
+active class Producer
+  def produce() : Fut[int]
+    new Producer ! meta_produce()
+  end
+  def meta_produce() : int
+    17
+  end
+end

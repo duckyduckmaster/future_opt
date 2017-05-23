@@ -1,0 +1,31 @@
+-- This file was partially automatically converted by encorec
+
+import Task
+read class Money
+  val amount : int
+  def init(i : int) : unit
+    this.amount = i
+  end
+end
+
+active class Test
+  def createMoney() : Money
+    new Money(4)
+  end
+  def update(m: Money): Money
+    m
+  end
+end
+
+active class Main
+  def main(): unit
+    val t = new Test()
+    val t2 = new Test()
+    val f1 = t ! createMoney()
+    this.await(f1)
+    val f2 = f1 ~~> fun (m: Money) => { t2 ! update(m) ~~> fun (m: Money) => m }
+    this.await(f2)
+    val money = get(get(f2))
+    println(money.amount)
+  end
+end

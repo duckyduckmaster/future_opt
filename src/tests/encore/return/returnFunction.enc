@@ -1,0 +1,30 @@
+-- This file was automatically converted by encorec
+
+fun top_level1[t](v : t) : t
+  return(v)
+end
+fun top_level2(v : Cell) : String
+  return("42")
+  "4711"
+end
+read class Cell
+  val f : String
+  def init(f : String) : unit
+    this.f = f
+  end
+  def to_s() : String
+    "".join(["Cell(", this.f, ")"])
+  end
+end
+active class Main
+  def main() : unit
+    let
+      c = new Cell("7")
+    in
+      println(c.to_s())
+      println(top_level1(c).to_s())
+      println(top_level2(c))
+      println(c.to_s())
+    end
+  end
+end

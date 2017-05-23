@@ -1,0 +1,67 @@
+import ParT.ParT
+
+fun parFunctor[a, b](p : Par[a -> b], item : a) : Par[b]
+  p >> (fun (fn : a -> b) => fn(item))
+end
+
+fun maybeSomething[a, b](m : Maybe[a -> b], item : a) : a -> (a, Maybe[b])
+  fun (x : a)
+    match m with
+      case Just(fn) =>
+        (x, Just(fn(item)))
+      end
+      case Nothing =>
+        (item, Nothing)
+      end
+
+    end
+  end
+end
+
+fun wrapperFunction[a, b](clos : a -> b, item : a) : a -> (b, a -> b)
+  fun (x : a)
+    (clos(item), clos)
+  end
+end
+
+fun intToString(x : int) : String
+  string_from_int(x)
+end
+
+active class Main
+  def testParFunctor() : unit
+    val parFn = liftv(intToString)
+    val result = extract(parFunctor(parFn, 42))
+    for x <- result do
+      println("ParFunctor: {}", x)
+    end
+  end
+
+  def testMaybeSomething() : unit
+    val m = Just(intToString)
+    val fn = maybeSomething(m, 42)
+    match fn(41) with
+      case (lastItem, Nothing) =>
+        println("MaybeSomething: ERROR")
+      end
+      case (lastItem, Just(result)) =>
+        println("MaybeSomething: {}, {}", lastItem, result)
+      end
+    end
+  end
+
+  def testWrapperFunction() : unit
+    val fn = wrapperFunction(intToString, 20)
+    match fn(0) with
+      case (result, unused) =>
+        println("WrapperFunction: {}", result)
+      end
+    end
+  end
+
+  def main() : unit
+    this.testParFunctor()
+    this.testMaybeSomething()
+    this.testWrapperFunction()
+  end
+end

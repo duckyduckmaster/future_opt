@@ -1,0 +1,20 @@
+read trait T
+  require val f : int
+  require def foo() : unit
+end
+read trait S
+  def bar() : unit
+    println("I compile and run!")
+  end
+end
+class Foo : T(bar()) + S
+  val f : int
+  def foo() : unit
+    this.bar()
+  end
+end
+active class Main
+  def main() : unit
+    (new Foo).foo()
+  end
+end

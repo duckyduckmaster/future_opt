@@ -1,0 +1,12 @@
+-- This file was automatically converted by encorec
+
+class Foo[t, u]
+  def init(x : t) : unit
+    ()
+  end
+end
+class Main
+  def main() : unit
+    new Foo(42)
+  end
+end

@@ -1,0 +1,12 @@
+-- This file was automatically converted by encorec
+
+active class A
+  def f[t]() : unit
+    ()
+  end
+end
+active class Main
+  def main() : unit
+    new A ! f()
+  end
+end

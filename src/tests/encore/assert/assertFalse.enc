@@ -1,0 +1,8 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    assertFalse(false)
+    assertFalse(true, "Kingfisher")
+  end
+end

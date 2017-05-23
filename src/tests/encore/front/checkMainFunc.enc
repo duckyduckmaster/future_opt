@@ -1,0 +1,9 @@
+-- This file was automatically converted by encorec
+
+class Foo
+end
+active class Main
+  def main_disappear() : unit
+    ()
+  end
+end

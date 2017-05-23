@@ -1,0 +1,11 @@
+active class Foo
+  def foo_arg(arg: Fut[int]) : int
+    forward(arg)
+  end
+end
+
+active class Main
+  def main() : unit
+    ()
+  end
+end

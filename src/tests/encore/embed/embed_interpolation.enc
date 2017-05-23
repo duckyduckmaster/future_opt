@@ -1,0 +1,20 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    this.foo(2)
+  end
+  def foo(y : int) : unit
+    let
+      x = 1
+    in
+      EMBED (unit)
+        printf("x=%llu\n", #{x});
+      END
+      EMBED (unit)
+        printf("y=%llu\n", #{y});
+      END
+      println("(btw: helloponyworld)")
+    end
+  end
+end

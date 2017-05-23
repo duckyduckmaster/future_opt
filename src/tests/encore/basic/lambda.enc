@@ -1,0 +1,82 @@
+-- This file was automatically converted by encorec
+
+active class CreditCard
+  def printX() : unit
+    println(42)
+  end
+  def printMain(m : Main, x : int) : unit
+    m ! pprint(x)
+  end
+end
+
+local class CreditPass
+  var fi : int -> unit
+  var fii : int -> int
+  def init(fi : int -> unit, fii : int -> int) : unit
+    this.fi = fi
+    this.fii = fii
+  end
+  def testFi(x : int) : unit
+    let
+      fi = this.fi
+    in
+      fi(x)
+    end
+  end
+  def testFii(x : int) : unit
+    let
+      fii = this.fii
+    in
+      println(fii(x))
+    end
+  end
+  def pass(c : CreditCard) : unit
+    get(c ! printX())
+  end
+  def passMain(m : Main) : unit
+    m ! pprint(42)
+  end
+end
+
+active class Main
+  var creditcard : CreditCard
+  var tupleFun : int -> (int, int)
+  var maybeFun : int -> Maybe[int]
+  var funFun : int -> int -> int
+  def free() : unit
+    val f = fun ()
+              for i <- [0..5] do
+                println(i)
+              end
+            end
+  end
+  def pprint(x : int) : unit
+    println(x)
+  end
+  def main() : unit
+    let
+      x = new CreditCard
+      p = new CreditPass(fun (x : int) => (), fun (x : int) => x)
+      p2 = new CreditPass(fun (x : int)
+                            println(x)
+                          end,
+                          fun (x : int) => x + 1)
+      show = fun (i : int) => println(i)
+      ff = fun (z : int)
+             get(x ! printX())
+             x ! printMain(this, 42)
+             p.pass(x)
+             show(z)
+             p.passMain(this)
+             this.pprint(42)
+             this.creditcard ! printX()
+           end
+    in
+      this.creditcard = x
+      ff(42)
+      show(42)
+      p2.testFi(42)
+      p2.testFii(41)
+    end
+  end
+end

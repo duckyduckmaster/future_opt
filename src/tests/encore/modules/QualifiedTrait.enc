@@ -1,0 +1,15 @@
+-- This file was automatically converted by encorec
+
+import qualified TraitLib
+import qualified A.B.QLib
+class Z : A.B.QLib.T + TraitLib.S
+end
+active class Main
+  def main() : unit
+    let
+      z = new Z
+    in
+      println(z.zero())
+    end
+  end
+end

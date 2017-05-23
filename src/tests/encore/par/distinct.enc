@@ -1,0 +1,71 @@
+-- This file was automatically converted by encorec
+
+import ParT.ParT
+fun cmpInt(x : int, y : int) : int
+  if x > y then
+    1
+  else
+    if x < y then
+      -(1)
+    else
+      0
+    end
+  end
+end
+fun cmpString(x : X, y : X) : int
+  x.s.compare(y.s)
+end
+read class X
+  val s : String
+  def init(s : String) : unit
+    this.s = s
+  end
+  def getS() : String
+    this.s
+  end
+end
+active class T
+  def getValue[sharable t](x : t) : t
+    x
+  end
+  def getPar(x : int) : Par[int]
+    liftv(x)
+  end
+end
+active class Main
+  def futures() : unit
+    val p1 = liftf(new T ! getValue(12))
+    val p2 = liftf(new T ! getValue(23))
+    val p3 = liftf(new T ! getPar(42))
+    val presult = p2 ||| liftv(2) ||| liftv(2) ||| liftv(3) ||| join(p3) ||| p1
+    val result = distinct(presult, cmpInt)
+    for v <- extract(result) do
+      print("Results: {}\n", v)
+    end
+  end
+  def values() : unit
+    val p = liftv(23) ||| liftv(1) ||| liftv(0)
+    val pp = liftv(23) ||| join(liftv(liftv(42))) ||| p ||| liftv(1) ||| liftv(0)
+    val result = distinct(pp, cmpInt)
+    for v <- extract(result) do
+      print("Results: {}\n", v)
+    end
+  end
+  def objects() : unit
+    val fp1 = liftv(new X("Amazing"))
+    val fp2 = liftv(new X("Amazing")) ||| liftv(new X("Sounds"))
+    val p = fp1 ||| fp2
+    val result = distinct(p, cmpString)
+    for v <- extract(result) do
+      print("Results: {}\n", v.s)
+    end
+  end
+  def main() : unit
+    println("Running distinct on values")
+    this.values()
+    println("Running distinct on futures and futures to par")
+    this.futures()
+    println("Running distinct on objects")
+    this.objects()
+  end
+end

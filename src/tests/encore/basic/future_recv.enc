@@ -1,0 +1,23 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  var a : Agent
+  def main() : unit
+    this.a = new Agent()
+    this.perform(1000)
+  end
+  def perform(n : int) : unit
+    if n == 0 then
+      print("done")
+    else
+      this.a ! go(this.a)
+      new [int](100)
+      this!perform(n - 1)
+    end
+  end
+end
+active class Agent
+  def go(a : Agent) : unit
+    ()
+  end
+end

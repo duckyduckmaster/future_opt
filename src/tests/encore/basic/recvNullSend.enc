@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def test() : unit
+    print("If you can read this, then recvNullSend failed")
+  end
+  def main() : unit
+    let
+      x = null : Main
+    in
+      x!test()
+    end
+  end
+end

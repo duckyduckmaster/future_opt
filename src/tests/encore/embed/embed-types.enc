@@ -1,0 +1,21 @@
+linear class Container[t]
+  var f : t
+  def write(f : t) : unit
+    this.f = f
+  end
+
+  def read() : t
+    this.f
+  end
+end
+
+active class Main
+  def main() : unit
+    let c = new Container[EMBED char* END] in
+      c.write(EMBED (EMBED char* END) "Hello"; END)
+      let s = c.read() in
+        EMBED (unit) puts(#{s}); END
+      end
+    end
+  end
+end

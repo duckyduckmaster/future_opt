@@ -1,0 +1,71 @@
+-- This file was automatically converted by encorec
+
+fun id[a](x : a) : a
+  x
+end
+active class Cell[sharable a]
+  var value : a
+  def init(value : a) : unit
+    this.value = value
+  end
+  def getVal() : a
+    this.value
+  end
+  def getVal2() : unit
+    new Cell[a](this.value)
+  end
+  def clone(value : a) : unit
+    new Cell[a](value)
+  end
+end
+active class Pair[a, b]
+  var fst : a
+  var snd : b
+  def init(fst : a, snd : b) : unit
+    this.fst = fst
+    this.snd = snd
+  end
+  def getFst() : a
+    this.fst
+  end
+  def getSnd() : b
+    this.snd
+  end
+  def getCustom[sharable d, g](z : a, x : d, y : g) : Maybe[d]
+    id(x)
+    this.liftJust(x)
+    this.liftJust(34)
+    this.liftJust(34)
+    this.liftJust(x)
+  end
+  def liftJust[d](x : d) : Maybe[d]
+    Just(x)
+  end
+  def testMethodInference[d, g](x : g, y : d) : unit
+    this.getCustom(this.fst, y, x)
+    this.getCustom(this.fst, x, y)
+  end
+end
+active class Main
+  def main() : unit
+    let
+      p = new Pair[int, String](42, "fortytwo")
+      c = new Cell[Pair[int, String]](p)
+      pp = get(c ! getVal())
+      d = p ! getCustom(23, 5, "")
+    in
+      p!getCustom(23, 5, "")
+      println(get(pp ! getFst()))
+      println(get(pp ! getSnd()))
+      match get(d) with
+        case Just(x) =>
+          println(x)
+        end
+        case Nothing =>
+          println("Error")
+        end
+
+      end
+    end
+  end
+end

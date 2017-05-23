@@ -1,0 +1,19 @@
+unsafe class Duplicator[unsafe t]
+  var f : t
+  def duplicate() : (t, t)
+    (this.f, this.f)
+  end
+end
+
+linear class Token
+end
+
+active class Main
+  def main(args : [String]) : unit
+    val duplicator = new Duplicator[Token]
+    duplicator.f = new Token
+    match duplicator.duplicate() with
+      case (y, y') => println("All your linear are belong to us")
+    end
+  end
+end

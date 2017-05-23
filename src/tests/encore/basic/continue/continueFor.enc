@@ -1,0 +1,7 @@
+active class Main
+  def main() : unit
+    for i <- [1,2] do
+      continue
+    end
+  end
+end

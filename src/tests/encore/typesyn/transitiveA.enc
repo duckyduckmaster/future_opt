@@ -1,0 +1,11 @@
+typedef E = D
+typedef D = T
+local trait T
+end
+class C2 : E
+end
+active class Main
+  def main() : unit
+    println(10)
+  end
+end

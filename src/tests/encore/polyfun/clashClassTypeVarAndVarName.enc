@@ -1,0 +1,16 @@
+-- This file was automatically converted by encorec
+
+active class Test[t, k]
+  def clashingNameAndTypes(x : t, y : k) : unit
+    val nestedClosure = fun (t : k)
+                          val idFn = fun (xx : t) => xx
+                          idFn(x)
+                        end
+    nestedClosure(y)
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

@@ -1,0 +1,12 @@
+-- This file was automatically converted by encorec
+
+fun test[t, k](x : t, y : k) : unit
+  fun (t : int)
+    fun (z : t) => z
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

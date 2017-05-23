@@ -1,0 +1,21 @@
+-- This file was partially converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      t = new Test[String]
+    in
+      t ! publicMethod("test")
+      println(get(t ! publicMethod("Testing access modifiers")))
+    end
+  end
+end
+
+active class Test[t]
+  def method(x : t) : t
+    x
+  end
+  def publicMethod(x : t) : t
+    this.method(x)
+  end
+end

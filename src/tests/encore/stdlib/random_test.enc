@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+import Random
+active class Main
+  def main() : unit
+    let
+      r = new Random(100)
+      v1 = r.random(1)
+      v2 = random(1)
+    in
+      print("{}\n{}\n", v1, v2)
+    end
+  end
+end

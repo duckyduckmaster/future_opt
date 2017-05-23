@@ -1,0 +1,11 @@
+active class Main
+  def main() : unit
+    (1, 2, 3, 4, Just(new A)) == (1, 2, 3, 4, Just(new A))
+  end
+end
+
+class A
+end
+
+class B : Id
+end

@@ -1,0 +1,19 @@
+-- This file was automatically converted by encorec
+
+active class Foo
+  stream foo1() : int
+    yield(1)
+  end
+  stream foo2() : int
+    let
+      foo3 = this.foo1()
+    in
+      yield(2)
+    end
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

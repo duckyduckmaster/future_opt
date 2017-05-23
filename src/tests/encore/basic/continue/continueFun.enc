@@ -1,0 +1,9 @@
+fun foo() : unit
+  continue
+end
+
+active class Main
+  def main() : unit
+    ()
+  end
+end

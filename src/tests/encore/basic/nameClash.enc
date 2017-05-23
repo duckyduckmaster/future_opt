@@ -1,0 +1,30 @@
+-- This file was automatically converted by encorec
+
+fun strlen(default : int) : unit
+  let
+    static = default
+  in
+    default
+  end
+end
+active class Foo
+  var default : int
+  var Active_Main_t : int
+  def strcat(volatile : int) : unit
+    let
+      f = fun (default : int) => volatile + default
+    in
+      f(volatile)
+    end
+  end
+end
+active class Main
+  def main() : unit
+    let
+      default = 42
+    in
+      strlen(default)
+      println("Hello, Ponyworld!")
+    end
+  end
+end

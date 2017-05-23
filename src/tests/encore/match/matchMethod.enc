@@ -1,0 +1,26 @@
+read class C
+  val f : int
+  def init(f : int) : unit
+    this.f = f
+  end
+
+  def private match Internal() : Maybe[int]
+    Just(this.f)
+  end
+
+  def match Pattern() : Maybe[int]
+    match this with
+      case Internal(x) => Just(x)
+      case _ => Nothing
+    end
+  end
+end
+
+active class Main
+  def main() : unit
+    val x = new C(42)
+    match x with
+      case Pattern(y) => print(y)
+    end
+  end
+end

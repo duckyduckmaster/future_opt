@@ -1,0 +1,16 @@
+Here is a literate program that imports two modules Foo and Bar,
+the first of which is also a literate program and the second of
+which is a regular program.
+
+#+begin_src encore
+import Foo
+import Bar
+
+active class Main
+  def main() : unit
+    foo()
+    bar()
+    println("Hello mixed literate world!")
+  end
+end
+#+end_src encore

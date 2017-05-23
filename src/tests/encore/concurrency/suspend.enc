@@ -1,0 +1,25 @@
+active class Main
+  def foo() : int
+    0
+  end
+
+  def main() : unit
+    let
+      t = new Test
+    in
+        t ! fst(this)
+        t ! snd()
+    end
+  end
+end
+active class Test
+  def fst(m:Main) : unit
+    print("Before suspend\n")
+    get(m ! foo())
+    this.suspend()
+    print("After suspend\n")
+  end
+  def snd() : unit
+    print("Interleaving!\n")
+  end
+end

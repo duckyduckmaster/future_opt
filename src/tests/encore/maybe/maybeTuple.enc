@@ -1,0 +1,166 @@
+-- This file was automatically converted by encorec
+
+fun test_catch_all(z : Maybe[(int, int)]) : String
+  match z with
+    case z =>
+      "catchall"
+    end
+    case Just((32, 32)) =>
+      "Error, general condition should have been catched first"
+    end
+
+  end
+end
+fun test_catch_specific_val(x : Maybe[(int, int)]) : String
+  match x with
+    case Just((32, 32)) =>
+      "32,32"
+    end
+    case z =>
+      "error, should catch specific value"
+    end
+
+  end
+end
+fun test_match_decl() : unit
+  match Just(Just((32, 32))) with
+    case Nothing =>
+      println("nothing")
+    end
+    case Just(z) =>
+      println("just z")
+    end
+    case Just(Nothing) =>
+      println("just nothing")
+    end
+    case Just(Just(z)) =>
+      println("just just z")
+    end
+    case Just(Just((0, 0))) =>
+      println("just just (zero,zero)")
+    end
+    case z =>
+      ()
+    end
+
+  end
+end
+fun test_match_on_object(o : Main) : Maybe[Main]
+  match Just(o) with
+    case Just(z) =>
+      Just(o)
+    end
+    case z =>
+      Nothing : Maybe[Main]
+    end
+
+  end
+end
+fun test_precedence_of_match() : unit
+  match Just(Just((32, 32))) with
+    case Nothing =>
+      println("nothing")
+    end
+    case Just(Nothing) =>
+      println("just nothing")
+    end
+    case Just(Just(z)) =>
+      println("just just z")
+    end
+    case Just(Just((0, 0))) =>
+      println("just just (zero,zero)")
+    end
+    case Just(z) =>
+      println("just z")
+    end
+    case z =>
+      println("catch all")
+    end
+
+  end
+end
+fun test_match_nothing_decl() : unit
+  match Nothing : Maybe[(int, int)] with
+    case Just(z) =>
+      println("12,12")
+    end
+    case Just((12, 12)) =>
+      println("23,23")
+    end
+    case Just((0, 0)) =>
+      println("0,0")
+    end
+    case Nothing =>
+      println("Nothing")
+    end
+
+  end
+end
+fun test_pass_args_and_return_of_maybe() : Maybe[(int, int)]
+  match Just((32, 32)) with
+    case Just(z) =>
+      println("Just(z)")
+      Just(z)
+    end
+    case Nothing =>
+      println("Nothing")
+      Nothing : Maybe[(int, int)]
+    end
+
+  end
+end
+fun test_unification_last_expression() : Maybe[(int, int)]
+  Nothing
+end
+fun test_multiple_assignments(x : Maybe[(int, int)]) : (int, int)
+  var x' = x
+  var y = Nothing : Maybe[(int, int)]
+  val z = Just((32, 32))
+  x' = y
+  y = Just((23, 23))
+  y = x
+  y = z
+  x' = Nothing : Maybe[(int, int)]
+  y
+  match x with
+    case Just(z) =>
+      (23, 23)
+    end
+    case Nothing =>
+      (34, 34)
+    end
+
+  end
+end
+read class Poly[t]
+  def morphic(x : t) : Maybe[t]
+    Just(x)
+  end
+end
+active class Main
+  def main() : unit
+    let
+      x = Just((32, 32))
+      poly = new Poly[(int, int)]
+    in
+      println(test_catch_all(x))
+      println(test_catch_specific_val(x))
+      test_match_decl()
+      test_match_on_object(this)
+      test_precedence_of_match()
+      test_match_nothing_decl()
+      test_pass_args_and_return_of_maybe()
+      test_unification_last_expression()
+      test_multiple_assignments(x)
+      match poly.morphic((32, 32)) with
+        case Just((y, z)) =>
+          println("{},{}", y, z)
+        end
+        case Nothing =>
+          println("0,0")
+        end
+
+      end
+    end
+  end
+end

@@ -1,0 +1,11 @@
+-- This file was automatically converted by encorec
+
+import Task
+fun inc(x : int) : int
+  x + 1
+end
+active class Main
+  def main() : unit
+    println(get(async(inc(42)) ~~> fun (x : int) => inc(x)))
+  end
+end

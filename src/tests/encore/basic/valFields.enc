@@ -1,0 +1,78 @@
+local trait Mappable[v]
+  require var value : v
+  require val covariance : Mappable[v]
+  require def next() : Mappable[v]
+  def map(f : v -> v) : unit
+    this.value = f(this.value)
+    this.next().map(f)
+  end
+end
+local trait Push[v]
+  require var top : Mappable[v]
+  def push(value : v) : unit
+    this.top = new Link[v](value, this.top)
+  end
+end
+local class Sentinel[v] : Mappable[v]
+  val covariance : Sentinel[v]
+  var value : v
+  def init() : unit
+    ()
+  end
+  def next() : Mappable[v]
+    this
+  end
+  def map(f : v -> v) : unit
+    ()
+  end
+end
+local class Link[v] : Mappable[v](next)
+  val covariance : Link[v]
+  var value : v
+  var next : Mappable[v]
+  def init(value : v, next : Mappable[v]) : unit
+    this.value = value
+    this.next = next
+  end
+  def next() : Mappable[v]
+    this.next
+  end
+end
+local class Stack[v] : Push[v]
+  val top : Mappable[v]
+  def init() : unit
+    this.top = new Sentinel[v]()
+  end
+  def map(f : v -> v) : unit
+    this.top.map(f)
+  end
+end
+active class Main
+  def main() : unit
+    let
+      l = new Stack[int]()
+      s = new Stack[String]()
+      bump = fun (x : int) => x + 1
+      showNum = fun (x : int)
+                  println(x)
+                  x
+                end
+      showString = fun (x : String)
+                     println(x)
+                     x
+                   end
+    in
+      l.push(1)
+      l.push(2)
+      l.push(3)
+      l.push(4)
+      l.map(bump)
+      l.map(showNum)
+      s.push("four")
+      s.push("three")
+      s.push("two")
+      s.push("one")
+      s.map(showString)
+    end
+  end
+end

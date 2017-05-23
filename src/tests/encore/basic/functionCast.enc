@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+fun fn() : (String, String)
+  ("Hello", "world")
+end
+active class Main
+  def main() : unit
+    val foo = fn : () -> (String, String)
+    match foo() with
+      case (h, w) => println("{} {}", h, w)
+
+    end
+  end
+end

@@ -1,0 +1,28 @@
+read trait Foo
+end
+read trait Bar
+end
+read trait Baz
+end
+class C1 : Foo + Bar
+end
+class C2 : Foo + Baz
+end
+class C3 : Baz + Bar
+end
+active class Main
+  def main() : unit
+    match 1 with
+      case 0 =>
+        new C1
+      end
+      case 1 =>
+        new C2
+      end
+      case _ =>
+        new C3
+      end
+
+    end
+  end
+end

@@ -1,0 +1,22 @@
+-- This file was automatically converted by encorec
+
+active class Foo
+  var f : unit
+  def foo(u : unit) : unit
+    println("Got unit")
+  end
+end
+active class Main
+  def main() : unit
+    var unit1 = ()
+    val unit2 = ()
+    val x = new Foo
+    val f = fun (x : unit)
+              println("Got unit")
+              x
+            end
+    x ! foo(unit1)
+    f(unit2)
+    unit1 = unit2
+  end
+end

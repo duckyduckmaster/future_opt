@@ -1,0 +1,8 @@
+-- This file was automatically converted by encorec
+
+active class Foo
+  var number : int
+  def link(a : Foo) : unit
+    a.number
+  end
+end

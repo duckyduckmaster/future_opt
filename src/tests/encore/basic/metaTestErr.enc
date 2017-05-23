@@ -1,0 +1,11 @@
+active class Main
+  def main() : unit
+    EMBED (unit)
+      fprintf(stderr, "This should be printed on stderr\n");
+      fflush(stderr);
+      fprintf(stdout, "This should be printed on stdout\n");
+      abort();
+      fprintf(stdout, "This should not be printed at all\n");
+    END
+  end
+end

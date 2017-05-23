@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+typedef G = T
+typedef T = int
+active class Main
+  def main() : unit
+    let
+      x = 10 : T
+      y = x : G
+    in
+      println(y)
+    end
+  end
+end

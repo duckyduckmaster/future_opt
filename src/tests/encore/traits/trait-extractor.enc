@@ -1,0 +1,30 @@
+local trait Result[b]
+  require def Success() : Maybe[b]
+  def Fail() : Maybe[int]
+    Nothing
+  end
+end
+class Success[b] : Result[b](data)
+  var data : b
+  def init(data : b) : unit
+    this.data = data
+  end
+  def Success() : Maybe[b]
+    Just(this.data)
+  end
+end
+active class Main
+  var foo : Result[int]
+  def main() : unit
+    this.foo = new Success[int](5)
+    match this.foo with
+      case Fail(n) =>
+        print("This shouldn't happen!")
+      end
+      case Success(x) =>
+        println("It's a success! The resulting value is {}", x)
+      end
+
+    end
+  end
+end

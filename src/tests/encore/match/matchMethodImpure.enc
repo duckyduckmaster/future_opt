@@ -1,0 +1,20 @@
+local class C
+  var f : int
+  def init(f : int) : unit
+    this.f = f
+  end
+
+  def match Pattern() : Maybe[int]
+    this.f = 0
+    Just(this.f)
+  end
+end
+
+active class Main
+  def main() : unit
+    val x = new C(42)
+    match x with
+      case Pattern(y) => print(y)
+    end
+  end
+end

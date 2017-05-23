@@ -1,0 +1,58 @@
+-- This file was automatically converted by encorec
+
+import ParT.ParT
+fun generateMillionItems(var p : Par[int]) : Par[int]
+  for i <- [1..10000000] do
+    p = p ||| liftv(1)
+  end
+  p
+end
+
+fun generateStrings(var p : Par[String]) : Par[String]
+  for i <- [1..9] do
+    p = p ||| liftv(string_from_int(i))
+  end
+  p ||| liftf(new T ! getString())
+end
+
+active class T
+  def getString() : String
+    "ab"
+  end
+end
+
+active class Main
+  def testAggregatePrimitive() : unit
+    let
+      m = generateMillionItems(empty[int]())
+      result = aggregate[int, int, int](m,
+                                        0,
+                                        fun (s : int, acc : int) => acc + 1,
+                                        fun (x : int) => x) >> fun (total : int) => total
+    in
+      println(extract(result)(0))
+    end
+  end
+
+  def testAggregateObject() : unit
+    let
+      m = generateStrings(empty[String]())
+      fn = fun (var acc : String, s : String)
+             if not(acc.contains_ignore_case(s)) then
+               acc = acc.concatenate(s)
+             end
+             acc
+           end
+      result = aggregate[String, String, String](m, "012345678", fn, fun (x : String) => x)
+    in
+      println(extract(result)(0))
+    end
+  end
+
+  def main() : unit
+    println("testAggregate()")
+    this.testAggregatePrimitive()
+    println("testAggregateObject()")
+    this.testAggregateObject()
+  end
+end

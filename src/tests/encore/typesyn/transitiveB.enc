@@ -1,0 +1,15 @@
+typedef E = D
+typedef D = T
+local trait T
+end
+class C1 : D
+end
+active class Main
+  def main() : unit
+    let
+      c = new C1
+    in
+      print("10")
+    end
+  end
+end

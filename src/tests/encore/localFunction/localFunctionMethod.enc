@@ -1,0 +1,31 @@
+-- This file was automatically converted by encorec
+
+local class Foo
+  def foo() : int
+    13 + local1() + local2(15)
+  where
+    fun local1() : int
+      val x = 14
+      x
+    end
+    fun local2(x : int) : int
+      x
+    end
+  end
+  def bar() : int
+    local1()
+  where
+    fun local1() : int
+      0
+    end
+  end
+end
+active class Main
+  def main() : unit
+    let
+      x = new Foo()
+    in
+      println(x.foo() + x.bar())
+    end
+  end
+end

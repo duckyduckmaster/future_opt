@@ -1,0 +1,11 @@
+active class Main
+  def match Foo() : Maybe[bool]
+    Just(true)
+  end
+  def main(args : [String]) : unit
+    match this with
+      case Foo(b) when b => println("Foo!")
+      case _ => println("Boo")
+    end
+  end
+end

@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def app(f : String -> unit, s : String) : unit
+    f(s)
+  end
+  def main() : unit
+    let
+      f = fun (s : String) => println(s)
+    in
+      this.app(f, "Hello ponyworld")
+    end
+  end
+end

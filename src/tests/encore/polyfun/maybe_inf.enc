@@ -1,0 +1,60 @@
+-- This file was automatically converted by encorec
+
+fun fCreateParametricOptionType[t](arg1 : t) : Maybe[t]
+  Just(arg1)
+end
+fun fCreateParametricOptionTypeNothing[t](arg1 : t) : Maybe[t]
+  Nothing
+end
+fun extractAndCreateOptionValue[t](op : Maybe[t], v : t) : Maybe[t]
+  match op with
+    case Just(ignored) =>
+      Just(v)
+    end
+    case Nothing =>
+      Nothing
+    end
+
+  end
+end
+active class Main
+  def main() : unit
+    let
+      test1 = fCreateParametricOptionType("Test creation of 'Just a' inside parametric function")
+    in
+      match test1 with
+        case Just(s) =>
+          println(s)
+        end
+        case Nothing =>
+          println("Error: expected 'Just' value constructor but got 'Nothing'")
+        end
+
+      end
+    end
+    var testNothing = fCreateParametricOptionTypeNothing("Test the returns parametric Nothing")
+    match testNothing with
+      case Just(s) =>
+        println("Error, expected 'Nothing'")
+      end
+      case Nothing =>
+        testNothing = Just("re-assignment")
+        println("Test create parametric Nothing and can be re-assigned")
+      end
+
+    end
+    let
+      testNewVal = extractAndCreateOptionValue(Just("Remove this text"), "Append this text")
+    in
+      match testNewVal with
+        case Just(v) =>
+          println(v)
+        end
+        case Nothing =>
+          println("Error in 'extractAndCreateOptionValue', expected string 'Append this text'")
+        end
+
+      end
+    end
+  end
+end

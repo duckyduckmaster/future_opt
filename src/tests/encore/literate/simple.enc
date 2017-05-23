@@ -1,0 +1,13 @@
+This is a literate encore program. It consists of a single code
+block (shown below), this introduction, and a closing statement.
+
+#+begin_src encore
+active class Main
+  def main() : unit
+    println("Hello literate world!")
+  end
+end
+#+end_src encore
+
+As you probably understand by now, compiling this file will only
+compile the code above.

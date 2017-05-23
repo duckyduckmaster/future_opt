@@ -1,0 +1,23 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  var myFun : (String -> unit, String) -> unit
+  def app(f : String -> unit, s : String) : unit
+    let
+      myFun = this.myFun
+    in
+      myFun(f, s)
+    end
+  end
+  def main() : unit
+    let
+      doTwice = fun (f : String -> unit, x : String)
+                  f(x)
+                  f(x)
+                end
+    in
+      this.myFun = doTwice
+      this.app(fun (s : String) => println(s), "Hello ponyworld")
+    end
+  end
+end

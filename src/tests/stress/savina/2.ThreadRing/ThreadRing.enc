@@ -1,0 +1,38 @@
+fun create_ring(ring_size : int) : Actor
+  val a = new Actor(1)
+  a!create_ring(2, ring_size, a)
+  a
+end
+
+active class Actor
+  var id : int
+  var next : Actor
+  def init(id : int) : unit
+    this.id = id
+  end
+  def create_ring(id : int, ring_size : int, fst : Actor) : unit
+    if id <= ring_size then
+      this.next = new Actor(id)
+      this.next!create_ring(id + 1, ring_size, fst)
+    else
+      this.next = fst
+    end
+  end
+  def send(hops : int) : unit
+    if hops > 0 then
+      this.next!send(hops - 1)
+    else
+      println("Done at actor #{}",this.id)
+    end
+  end
+end
+active class Main
+  def main() : unit
+    let
+      ring_size = 100
+      num_pings = 100000
+    in
+      create_ring(ring_size)!send(num_pings)
+    end
+  end
+end

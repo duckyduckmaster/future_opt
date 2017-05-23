@@ -1,0 +1,439 @@
+-- This file was automatically converted by encorec
+
+EMBED
+
+#include <string.h>
+#include <strings.h>
+#include <ctype.h>
+BODY
+
+END
+
+fun strcmp(a : String, b : String) : bool
+  EMBED (bool)
+    strcmp(#{a}->_enc__field_data, #{b}->_enc__field_data) == 0;
+
+  END
+end
+fun arraycmp(a : [String], b : [String]) : bool
+  if |a| == |b| then
+    var same = true
+    repeat i <- |a| do
+      if not(strcmp(a(i), b(i))) then
+        same = false
+      end
+    end
+    same
+  else
+    false
+  end
+end
+active class Main
+  def main() : unit
+    new Test()
+  end
+end
+read class Test
+  def init() : unit
+    this.test_concatenate()
+    println("Concatenate passed")
+    this.test_copy()
+    println("Copy passed")
+    this.test_contains()
+    println("Contains passed")
+    this.test_contains_ignore_case()
+    println("Contains ignore case passed")
+    this.test_compare()
+    println("Compare passed")
+    this.test_compare_ignore_case()
+    println("Compare ignore case passed")
+    this.test_to_upper()
+    println("To upper passed")
+    this.test_to_lower()
+    println("To lower passed")
+    this.test_length()
+    println("Length passed")
+    this.test_join()
+    println("Join passed")
+    this.test_format()
+    println("Format passed")
+    this.test_substring()
+    println("Substring passed")
+    this.test_equals()
+    println("Equals passed")
+    this.test_occurrences()
+    println("Occurrences passed")
+    this.test_split()
+    println("Split passed")
+    this.test_trim()
+    println("Trim passed")
+    this.test_replace()
+    println("Replace passed")
+    this.test_find()
+    println("Find passed")
+    this.test_find_from()
+    println("Find from passed")
+    this.test_delete()
+    println("Delete passed")
+    this.test_format()
+    println("Format passed")
+    this.test_char_at()
+    println("Char at passed")
+    this.test_to_array()
+    println("To array passed")
+    this.test_from_array()
+    println("From array passed")
+    this.test_from_char()
+    println("From char passed")
+    this.test_string_from_int()
+    println("String from int passed")
+    this.test_to_int()
+    println("To int passed")
+    println("================")
+    println("All tests passed")
+    println("================")
+  end
+  def test_concatenate() : unit
+    let
+      a = "aa"
+      b = "bb"
+      e = ""
+    in
+      assertTrue(strcmp(a.concatenate(b), "aabb"))
+      assertTrue(strcmp(a.concatenate(a), "aaaa"))
+      assertTrue(strcmp(a.concatenate(e), "aa"))
+      assertTrue(strcmp(e.concatenate(a), "aa"))
+      assertFalse(a.concatenate(e) == a)
+    end
+  end
+  def test_copy() : unit
+    let
+      orig = "foobarbaz"
+      copy = orig.copy()
+    in
+      assertTrue(strcmp(orig, copy))
+      assertFalse(orig == copy)
+      assertTrue(orig.contains(copy))
+      assertTrue(copy.contains(orig))
+      assertTrue(orig.contains_ignore_case(copy))
+      assertTrue(copy.contains_ignore_case(orig))
+    end
+  end
+  def test_contains() : unit
+    assertTrue(("foobarbaz").contains("bar"))
+    assertFalse(("foobarbaz").contains("Bar"))
+    assertTrue(("").contains(""))
+    assertFalse(("").contains("nonempty"))
+  end
+  def test_contains_ignore_case() : unit
+    assertTrue(("foobarbaz").contains_ignore_case("bar"))
+    assertTrue(("foobarbaz").contains_ignore_case("Bar"))
+    assertTrue(("").contains_ignore_case(""))
+    assertFalse(("").contains_ignore_case("nonempty"))
+  end
+  def test_compare() : unit
+    assertTrue(("foobarbaz").compare("foobarbaz") == 0)
+    assertTrue(("foobarbaz").compare("Foobarbaz") > 0)
+    assertTrue(("").compare("") == 0)
+    assertTrue(("foobarbaz").compare("something") < 0)
+  end
+  def test_compare_ignore_case() : unit
+    assertTrue(("foobarbaz").compare_ignore_case("foobarbaz") == 0)
+    assertTrue(("foobarbaz").compare_ignore_case("Foobarbaz") == 0)
+    assertTrue(("").compare_ignore_case("") == 0)
+    assertTrue(("foobarbaz").compare_ignore_case("something") < 0)
+  end
+  def test_to_upper() : unit
+    assertTrue(strcmp(("uppercase").to_upper(), "UPPERCASE"))
+    assertTrue(strcmp(("UPPERCASE").to_upper(), "UPPERCASE"))
+    assertTrue(strcmp(("").to_upper(), ""))
+    assertFalse(strcmp(("lowercase").to_upper(), "lowercase"))
+  end
+  def test_to_lower() : unit
+    assertTrue(strcmp(("UPPERCASE").to_lower(), "uppercase"))
+    assertTrue(strcmp(("uppercase").to_lower(), "uppercase"))
+    assertTrue(strcmp(("").to_lower(), ""))
+    assertFalse(strcmp(("lowercase").to_lower(), "LOWERCASE"))
+  end
+  def test_length() : unit
+    assertTrue(("13 characters").length() == 13)
+    assertTrue(("").length() == 0)
+  end
+  def test_substring() : unit
+    assertTrue(match ("abcdefghijklmnop").substring(0, 0) with
+                 case Just(s) =>
+                   strcmp(s, "")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(0, 10) with
+                 case Just(s) =>
+                   strcmp(s, "abcdefghij")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(0, 20) with
+                 case Just(s) =>
+                   strcmp(s, "abcdefghijklmnop")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(100, 0) with
+                 case Just(s) =>
+                   strcmp(s, "")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(10, 12) with
+                 case Just(s) =>
+                   strcmp(s, "kl")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(10, 20) with
+                 case Just(s) =>
+                   strcmp(s, "klmnop")
+                 end
+                 case Nothing =>
+                   false
+                 end
+
+               end)
+    assertTrue(match ("abcdefghijklmnop").substring(-(1), 5) with
+                 case Nothing =>
+                   true
+                 end
+                 case _ =>
+                   false
+                 end
+
+               end)
+  end
+  def test_equals() : unit
+    assertTrue(("foo").equals("foo"))
+    assertFalse(("foo").equals("foo1"))
+  end
+  def test_occurrences() : unit
+    let
+      s = "lorem ipsum dolor lorem"
+    in
+      assertTrue(s.occurrences("lorem") == 2)
+      assertTrue(s.occurrences("lorem ") == 1)
+      assertTrue(s.occurrences(" lorem") == 1)
+      assertTrue(s.occurrences(" lorem ") == 0)
+      assertTrue(s.occurrences(" ") == 3)
+    end
+  end
+  def test_split() : unit
+    let
+      s = "lorem ipsum dolor lorem"
+    in
+      assertTrue(arraycmp(s.split("lorem"), ["", " ipsum dolor ", ""]))
+      assertTrue(arraycmp(s.split(" "), ["lorem", "ipsum", "dolor", "lorem"]))
+      assertTrue(s.equals(("").join(s.split(""))))
+      assertTrue(arraycmp(s.split(""), ["l", "o", "r", "e", "m", " ", "i", "p", "s", "u", "m", " ", "d", "o", "l", "o", "r", " ", "l", "o", "r", "e", "m"]))
+    end
+  end
+  def test_trim() : unit
+    assertTrue(strcmp((" \n \t foo \n\t\t\t\n     \t").trim(), "foo"))
+    assertTrue(strcmp(("foo").trim(), "foo"))
+  end
+  def test_replace() : unit
+    let
+      s = "lorem ipsum dolor lorem"
+    in
+      assertTrue(strcmp(s.replace("ipsum", "dolor").replace("dolor", "lorem"), "lorem lorem lorem lorem"))
+      assertTrue(strcmp(s.replace(" ", "").replace("dolOR", "lorem"), "loremipsumdolorlorem"))
+      ()
+    end
+  end
+  def test_find() : unit
+    assertTrue(("gggggggggghgggg").find("h") == 10)
+    assertTrue(("gggggggggghgggg").find("hg") == 10)
+    assertFalse(("gggggggggghgggg").find("hggggggggggggg") == 10)
+    assertTrue(("gggggggggghgggg").find("g") == 0)
+  end
+  def test_find_from() : unit
+    assertTrue(("0123456789").find_from("2", 10) == -(1))
+    assertTrue(("0123456789").find_from("2", 1) == 2)
+    assertTrue(("gggggggggghgggg").find_from("g", 10) == 11)
+  end
+  def test_delete() : unit
+    let
+      s = "foo bar  baz"
+    in
+      assertTrue(strcmp(s.delete(" "), "foobarbaz"))
+      assertTrue(strcmp(s.delete("foo "), "bar  baz"))
+      assertTrue(strcmp(s.delete(" bar "), "foo baz"))
+      assertTrue(strcmp(s.delete("baz"), "foo bar  "))
+    end
+  end
+  def test_join() : unit
+    let
+      s = ["A"]
+      ss = ["A", "B", "C"]
+      comma = ", "
+      nothing = ""
+    in
+      assertTrue(strcmp(nothing.join(ss), "ABC"))
+      assertTrue(strcmp(comma.join(ss), "A, B, C"))
+      assertTrue(strcmp(comma.join(s), "A"))
+    end
+  end
+  def test_format() : unit
+    assertTrue(strcmp(("%s-%s").format(["Bar", "Baz"]), "To be implemented"))
+  end
+  def test_char_at() : unit
+    let
+      s = "Hello, world!"
+    in
+      assertTrue(match s.char_at(0) with
+                   case Just(c) =>
+                     c == 'H'
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+      assertTrue(match s.char_at(4) with
+                   case Just(c) =>
+                     c == 'o'
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+      assertTrue(match s.char_at(12) with
+                   case Just(c) =>
+                     c == '!'
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+      assertTrue(match s.char_at(-(1)) with
+                   case Just(c) =>
+                     false
+                   end
+                   case Nothing =>
+                     true
+                   end
+
+                 end)
+      assertTrue(match s.char_at(13) with
+                   case Just(c) =>
+                     false
+                   end
+                   case Nothing =>
+                     true
+                   end
+
+                 end)
+    end
+  end
+  def test_to_array() : unit
+    let
+      s = "Hello, world!"
+      arr1 = s.to_array()
+      arr2 = ['H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!']
+      empty = ("").to_array()
+    in
+      for i <- [0..|arr1| - 1] do
+        assertTrue(arr1(i) == arr2(i))
+      end
+      assertTrue(|empty| == 0)
+    end
+  end
+  def test_from_array() : unit
+    let
+      s1 = "Hello, world!"
+      arr = ['H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!']
+      s2 = string_from_array(arr)
+      empty = string_from_array(new [char](0))
+    in
+      assertTrue(s1.equals(s2))
+      assertTrue(empty.equals(""))
+    end
+  end
+  def test_from_char() : unit
+    let
+      s = string_from_char('A')
+    in
+      assertTrue(s.equals("A"))
+    end
+  end
+  def test_string_from_int() : unit
+    let
+      s1 = string_from_int(123456789)
+      s2 = string_from_int(-(42))
+      s3 = string_from_int(0)
+    in
+      assertTrue(s1.equals("123456789"))
+      assertTrue(s2.equals("-42"))
+      assertTrue(s3.equals("0"))
+    end
+  end
+  def test_to_int() : unit
+    let
+      s1 = "42"
+      s2 = "-42"
+      s3 = "foobar"
+      s4 = "0x10xyz"
+    in
+      assertTrue(match s1.to_int() with
+                   case Just(n) =>
+                     n == 42
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+      assertTrue(match s2.to_int() with
+                   case Just(n) =>
+                     n == -(42)
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+      assertTrue(match s3.to_int() with
+                   case Just(n) =>
+                     false
+                   end
+                   case _ =>
+                     true
+                   end
+
+                 end)
+      assertTrue(match s4.to_int() with
+                   case Just(n) =>
+                     n == 16
+                   end
+                   case Nothing =>
+                     false
+                   end
+
+                 end)
+    end
+  end
+end

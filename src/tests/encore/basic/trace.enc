@@ -1,0 +1,35 @@
+-- This file was automatically converted by encorec
+
+read trait C
+  def read() : String
+    "Hello"
+  end
+end
+active class A
+end
+class B : C
+end
+active class Foo
+  def init(a : A, b : B, c : C) : unit
+    ()
+  end
+  def foo(b : B) : B
+    b
+  end
+  def bar(b : B) : C
+    b : C
+  end
+end
+active class Main
+  def main() : unit
+    let
+      a = new A
+      b = new B
+      c = new B : C
+      x = new Foo(a, b, c)
+      b2 = get(x ! foo(b))
+    in
+      println((get(x ! bar(b2))).read())
+    end
+  end
+end

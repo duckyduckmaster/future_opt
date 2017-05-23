@@ -1,0 +1,25 @@
+linear trait Iterable[t]
+  require def iterator() : Iter[t]
+end
+linear trait Iter[t]
+  def skip() : Skip[t]
+    new Skip[t]()
+  end
+end
+class Skip[t] : Iter[t]
+end
+class ArrayIter[t] : Iter[t]
+end
+class ArrayIterable[t] : Iterable[t]
+  def iterator() : ArrayIter[t]
+    new ArrayIter[t]()
+  end
+end
+active class Main
+  def getIter(it : Iter[int]) : unit
+    println("In getIter")
+  end
+  def main() : unit
+    this.getIter(((new ArrayIterable[int]()).iterator()).skip())
+  end
+end

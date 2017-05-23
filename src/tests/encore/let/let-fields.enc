@@ -1,0 +1,20 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  var value : int
+  def main() : unit
+    this.value = 1024
+    var x = this.value
+    x = x + 1
+    if x == 1024 then
+      println("Failue when reading x -- got 1024, expected something else")
+    else
+      println("Test 1 OK")
+    end
+    if x == this.value then
+      println("Failue when comparing x and this.value -- they are the same but should not be")
+    else
+      println("Test 2 OK")
+    end
+  end
+end

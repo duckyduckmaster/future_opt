@@ -1,0 +1,31 @@
+-- This file was automatically converted by encorec
+
+read trait T
+  def id[a](x : a) : a
+    x
+  end
+  def phantom[a, b](x : a) : Maybe[b]
+    Nothing
+  end
+end
+class Foo[s] : T
+end
+active class Main
+  def main() : unit
+    let
+      f = (new Foo[int] : T).id[int](42)
+      f' = (new Foo[int] : T).phantom[int, String](42)
+    in
+      print("Id result: {}\n", f)
+      match f' with
+        case Nothing =>
+          print("Phantom type is 'Nothing'")
+        end
+        case Just(s) =>
+          print("ERROR")
+        end
+
+      end
+    end
+  end
+end

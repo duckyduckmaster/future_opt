@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+fun id[a](x : a) : a
+  myId(x)
+where
+  fun myId[a](x : a) : a
+    x
+  end
+end
+active class Main
+  def main() : unit
+    println(id(42))
+  end
+end

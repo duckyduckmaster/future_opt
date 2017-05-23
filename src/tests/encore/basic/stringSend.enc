@@ -1,0 +1,20 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : Fut[unit]
+    let
+      other = new Other("Hello Ponyworld-message")
+    in
+      other ! work()
+    end
+  end
+end
+active class Other
+  var message : String
+  def init(va : String) : unit
+    this.message = va
+  end
+  def work() : unit
+    println(this.message)
+  end
+end

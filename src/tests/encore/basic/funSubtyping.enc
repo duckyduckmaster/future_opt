@@ -1,0 +1,26 @@
+-- This file was automatically converted by encorec
+
+fun fn(x : Animal) : Dog
+  new Dog
+end
+read trait Animal
+  require def speak() : unit
+end
+
+class Dog : Animal
+  def speak() : unit
+    println("Woof")
+  end
+end
+class Cat : Animal
+  def speak() : unit
+    println("Meow")
+  end
+end
+active class Main
+  def main() : unit
+    val f = fn : Cat -> Animal
+    val animal = f(new Cat)
+    animal.speak()
+  end
+end

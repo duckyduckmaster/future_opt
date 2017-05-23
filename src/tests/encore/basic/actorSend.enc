@@ -1,0 +1,30 @@
+-- This file was automatically converted by encorec
+
+active class Other
+  var other : Other
+  def setOther(va : Other) : unit
+    this.other = va
+  end
+  def work() : Fut[unit]
+    let
+      othertmp = this.other
+    in
+      othertmp ! printMsg()
+    end
+  end
+  def printMsg() : unit
+    println("Hello Actorworld!")
+  end
+end
+
+active class Main
+  def main() : Fut[Fut[unit]]
+    let
+      other = new Other
+      another = new Other
+    in
+      other ! setOther(another)
+      other ! work()
+    end
+  end
+end

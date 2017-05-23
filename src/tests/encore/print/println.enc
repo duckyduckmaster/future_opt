@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    println("First a print with a newline")
+    print("Then two prints ")
+    print("without newlines")
+    println()
+    println("Look, a number: {}", 42)
+    print("Here's another one: {}", 99)
+    print(", but that one wasn't followed by a newline")
+    println()
+  end
+end

@@ -1,0 +1,17 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      other = new Other
+    in
+      other!printTwo("Hello", "Ponyworld!")
+    end
+  end
+end
+active class Other
+  def printTwo(a : String, b : String) : unit
+    println(a)
+    println(b)
+  end
+end

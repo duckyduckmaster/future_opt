@@ -1,0 +1,16 @@
+-- This file was automatically converted by encorec
+
+active class Test[t, k]
+  def polymorphicMethod[tt, kk](x : tt, y : kk) : unit
+    val nestedClosure = fun (tt : kk)
+                          val idFn = fun (xx : tt) => xx
+                          idFn(x)
+                        end
+    nestedClosure(y)
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

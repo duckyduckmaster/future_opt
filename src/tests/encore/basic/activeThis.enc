@@ -1,0 +1,49 @@
+-- This file was partially converted by encorec
+
+fun id[t](x : t) : t
+  x
+end
+
+active class Main
+  def main() : unit
+    let k = new Kiko ! xxx(3)
+        x = new Foo
+    in
+      assertTrue(get(get(x ! foo())))
+      assertTrue(get(get(x ! bar())))
+      assertTrue(get(get(x ! baz())))
+      println("Done!")
+    end
+  end
+end
+
+active class Kiko
+  def xxx(x : int) : int
+    x
+  end
+end
+
+active class Foo
+  def fr0b() : bool
+    true
+  end
+  def foo() : Fut[bool]
+    let
+      that = this
+    in
+      that ! fr0b()
+    end
+  end
+  def bar() : Fut[bool]
+    var that = null : Foo
+    that = this
+    that ! fr0b()
+  end
+  def baz() : Fut[bool]
+    let
+      that = id[Foo](this)
+    in
+      that ! fr0b()
+    end
+  end
+end

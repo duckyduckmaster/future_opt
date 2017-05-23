@@ -1,0 +1,59 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    if true then
+      42
+    end : unit
+    if true then
+      println("Hello Ponyworld 1!")
+    end
+    if true then
+      if true then
+        println("Hello Ponyworld 2!")
+      end
+    end
+    if true then
+      if false then
+        println("Bad Pony!")
+      else
+        println("Hello Ponyworld 3!")
+      end
+    end
+    if true then
+      if false then
+        println("Bad Pony!")
+      end
+    else
+      println("Bad Pony!")
+    end
+    if false then
+      if false then
+        println("Bad Pony!")
+      else
+        println("Bad Pony!")
+      end
+    end
+    if false then
+      if false then
+        println("Bad Pony!")
+      end
+    else
+      println("Hello Ponyworld 4!")
+    end
+    if false then
+      if true then
+        println("Bad Pony!")
+      else
+        println("Bad Pony!")
+      end
+    end
+    if false then
+      if true then
+        println("Bad Pony!")
+      end
+    else
+      println("Hello Ponyworld 5!")
+    end
+  end
+end

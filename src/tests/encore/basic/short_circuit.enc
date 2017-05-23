@@ -1,0 +1,19 @@
+-- This file was automatically converted by encorec
+
+fun foo() : bool
+  println("In foo")
+  true
+end
+fun bar() : bool
+  println("In bar")
+  false
+end
+active class Main
+  def main() : unit
+    if foo() || bar() then
+      println("yes")
+    else
+      println("no")
+    end
+  end
+end

@@ -1,0 +1,11 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def higherOrder(f : () -> int) : unit
+    println(f())
+  end
+  def main() : unit
+    val f = fun (x : int) => 2 * x
+    this.higherOrder(f)
+  end
+end

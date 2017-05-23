@@ -1,0 +1,29 @@
+read trait T
+  require val f : int
+  def foo() : int
+    this.f
+  end
+end
+read trait S
+  require val g : int
+  def foo() : int
+    this.g
+  end
+end
+class Foo : T(g) + S(f)
+  val f : int
+  val g : int
+  def init(f : int, g : int) : unit
+    this.f = f
+    this.g = g
+  end
+  def foo() : int
+    this.f + this.g
+  end
+end
+active class Main
+  def main() : unit
+    val x = new Foo(2, 3) : T
+    println("Five = {}", x.foo())
+  end
+end

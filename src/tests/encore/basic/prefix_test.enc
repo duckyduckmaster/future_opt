@@ -1,0 +1,17 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      nothing = "blingbling"
+      ping = true
+      anders = true
+    in
+      println(nothing)
+      println(not(ping))
+      println(not(ping))
+      println(not(anders))
+      println(ping && anders)
+    end
+  end
+end

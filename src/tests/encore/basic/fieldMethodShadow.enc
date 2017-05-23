@@ -1,0 +1,16 @@
+local class Foo
+  val fn : int -> int
+  def init(fn : int -> int) : unit
+    this.fn = fn
+  end
+  def fn (x : int) : int
+    x + 1
+  end
+end
+
+active class Main
+  def main(args : [String]) : unit
+    val x = new Foo(fun (x : int) => x * 100)
+    println(x.fn(4))
+  end
+end

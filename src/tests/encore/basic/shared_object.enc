@@ -1,0 +1,17 @@
+-- This file was automatically converted by encorec
+
+shared class A
+  var y : int
+  def init(y : int) : unit
+    this.y = y
+  end
+  def f(x : int) : int
+    1
+  end
+end
+active class Main
+  var x : int
+  def main() : unit
+    println(get((new A(0))!f(0)))
+  end
+end

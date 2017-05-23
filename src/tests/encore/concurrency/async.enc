@@ -1,0 +1,13 @@
+-- This file was automatically converted by encorec
+
+import Task
+active class Main
+  def main() : unit
+    let
+      y = 5
+      sum_five = async(y + 5)
+    in
+      println(get(sum_five))
+    end
+  end
+end

@@ -1,0 +1,13 @@
+read trait T
+  require val f : int
+  require def foo() : unit
+end
+class Foo : T(bad())
+  val f : int
+  def bar() : unit
+    ()
+  end
+  def foo() : unit
+    this.bar()
+  end
+end

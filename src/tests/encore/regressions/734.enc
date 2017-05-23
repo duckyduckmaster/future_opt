@@ -1,0 +1,22 @@
+fun inc(x : int) : int
+  x + 1
+end
+
+active class Foo
+  def f() : int
+    println("In f")
+    10
+  end
+
+  def g() : int
+    forward((new Foo)!f())
+  end
+end
+
+active class Main
+  def main() : unit
+    val foo = new Foo
+    foo!g()
+    get(foo!g())
+  end
+end

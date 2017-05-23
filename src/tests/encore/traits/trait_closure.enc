@@ -1,0 +1,19 @@
+local trait T
+  def getClosure() : () -> unit
+    fun () => println("You have finally reached closure!")
+  end
+end
+class Foo : T
+end
+class Bar : T
+end
+active class Main
+  def main() : unit
+    val x = new Foo()
+    val y = new Bar()
+    val f1 = x.getClosure()
+    val f2 = y.getClosure()
+    f1()
+    f2()
+  end
+end

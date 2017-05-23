@@ -1,0 +1,14 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    this.test(2)
+  end
+  def test(value : int) : unit
+    var i = value
+    while i < 11 do
+      println(i)
+      i = i + value
+    end
+  end
+end

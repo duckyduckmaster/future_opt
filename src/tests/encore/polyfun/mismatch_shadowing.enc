@@ -1,0 +1,13 @@
+-- This file was automatically converted by encorec
+
+fun foo[a](x : a, y : a) : a
+  x
+end
+fun bar[a]() : a
+  foo(42, "foo")
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

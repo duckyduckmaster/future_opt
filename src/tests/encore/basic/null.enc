@@ -1,0 +1,29 @@
+-- This file was automatically converted by encorec
+
+fun foo() : Foo
+  var x = 42
+  while x < 0 do
+    x = x - 1
+  end
+  null
+end
+active class Foo
+  def foo() : unit
+    ()
+  end
+end
+active class Main
+  def main() : unit
+    var x = null : Foo
+    val y = Just(null : Foo)
+    val f = fun () => null : Foo
+    null : Foo
+    (if false then
+       null
+     else
+       new Foo
+     end)!foo()
+    x = foo()
+    println("I ain't scared of no null!")
+  end
+end

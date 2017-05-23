@@ -1,0 +1,24 @@
+-- This file was automatically converted by encorec
+
+fun foo() : int
+  13 + 14 + id(15)
+where
+  fun id[a](x : a) : a
+    x
+  end
+end
+fun id[a](x : a) : a
+  myOtherId(myId(x))
+where
+  fun myId(x : a) : a
+    x
+  end
+  fun myOtherId[b](x : b) : b
+    x
+  end
+end
+active class Main
+  def main() : unit
+    println(id(foo()))
+  end
+end

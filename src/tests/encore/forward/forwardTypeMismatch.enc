@@ -1,0 +1,16 @@
+active class Bar
+  def bar() : int
+    42
+  end
+end
+active class Foo
+  def foo_type() : String
+    forward((new Bar)!bar())
+    ""
+  end
+end
+active class Main
+  def main() : unit
+    ()
+  end
+end

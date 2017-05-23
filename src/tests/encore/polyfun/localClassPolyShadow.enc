@@ -1,0 +1,27 @@
+-- This file was automatically converted by encorec
+
+read class Foo[a]
+  def foo() : int
+    13 + 14 + id(15)
+  where
+    fun id[t](x : t) : t
+      x
+    end
+  end
+  def id[t](x : t) : t
+    myOtherId(myId(x))
+  where
+    fun myId[t](x : t) : t
+      x
+    end
+    fun myOtherId[b](x : b) : b
+      x
+    end
+  end
+end
+active class Main
+  def main() : unit
+    val x = new Foo[int]
+    println(x.id(x.foo()))
+  end
+end

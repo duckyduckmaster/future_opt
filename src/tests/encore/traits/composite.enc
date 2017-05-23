@@ -1,0 +1,44 @@
+-- This file was automatically converted by encorec
+
+fun foo(x : T + U) : unit
+  ()
+end
+read trait T
+  require def f() : Maybe[int]
+end
+read trait U
+  require def g() : Maybe[T + U]
+end
+read class C : T + U
+  def f() : Maybe[int]
+    Just(42)
+  end
+  def g() : Maybe[T + U]
+    Nothing
+  end
+end
+
+active class Main
+  def main() : unit
+    let
+      c = new C : T + U
+      x = if false then
+            null
+          else
+            c
+          end
+      y = foo(null)
+    in
+      match c with
+        case g(x) =>
+          println("This should not happen")
+        end
+        case f(n) =>
+          println(n)
+        end
+
+      end
+      println("Done!")
+    end
+  end
+end

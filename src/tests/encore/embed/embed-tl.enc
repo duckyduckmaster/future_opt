@@ -1,0 +1,20 @@
+-- This file was automatically converted by encorec
+
+EMBED
+
+#include "embed_tl.h"
+int bar();
+BODY
+
+int bar() {
+  return 2;
+}
+END
+
+active class Main
+  def main() : unit
+    println(EMBED (int)
+              foo(1)+bar();
+            END)
+  end
+end

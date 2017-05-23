@@ -1,0 +1,12 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    repeat i <- 3 do
+      repeat j <- 3 do
+        println(i)
+        println(j)
+      end
+    end
+  end
+end

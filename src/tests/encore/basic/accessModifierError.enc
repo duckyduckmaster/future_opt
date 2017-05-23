@@ -1,0 +1,17 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      t = new Test
+    in
+      t.privateMethod()
+    end
+  end
+end
+
+read class Test
+  def private privateMethod() : unit
+    ()
+  end
+end

@@ -1,0 +1,35 @@
+active class Main
+  def continu(a : [int]) : unit
+    let
+      b = ["foo", "bar"]
+    in
+      repeat i <- |a| do
+        println(a(i))
+      end
+      println(b(0))
+      println(b(1))
+    end
+  end
+  def main() : unit
+    let
+      x = new Foo
+    in
+      x!foo(this)
+    end
+  end
+end
+active class Foo
+  def areturn() : [int]
+    new [int](10)
+  end
+  def foo(m : Main) : unit
+    let
+      a = this.areturn()
+    in
+      repeat i <- 10 do
+        a(i) = i
+      end
+      m!continu(a)
+    end
+  end
+end

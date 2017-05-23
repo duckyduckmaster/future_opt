@@ -1,0 +1,19 @@
+read trait T
+end
+
+class Foo
+  var g : T
+end
+
+active class Other
+  def pass(x : Foo) : unit
+    ()
+  end
+end
+
+active class Main
+  def main() : unit
+    new Other ! pass(new Foo)
+    println("Done!")
+  end
+end

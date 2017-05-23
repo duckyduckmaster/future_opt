@@ -1,0 +1,46 @@
+-- This file was automatically converted by encorec
+
+fun replicate[t](counter : int, item : t, acc : [t]) : [t]
+  acc(counter - 1) = item
+  if counter == 1 then
+    acc
+  else
+    replicate(counter - 1, item, acc)
+  end
+end
+active class Test
+  def id[sharable t](x : t) : t
+    x
+  end
+  def replicate[sharable t](counter : int, item : t) : [t]
+    let
+      ar = new [t](counter)
+    in
+      replicate(counter, item, ar)
+    end
+  end
+end
+read class TestPassive
+  def id[t](x : t) : t
+    x
+  end
+end
+active class Main
+  var a : Test
+  var p : TestPassive
+  def testIdInference() : unit
+    println(get(this.a ! id("Hello type inference in active class")))
+    println(this.p.id("Hello type inference in passive class"))
+  end
+  def testIntegrationBetweenParamFunctionsAndMethods() : unit
+    for item <- get(this.a ! replicate(4, "Works")) do
+      println(item)
+    end
+  end
+  def main() : unit
+    this.a = new Test
+    this.p = new TestPassive
+    this.testIdInference()
+    this.testIntegrationBetweenParamFunctionsAndMethods()
+  end
+end

@@ -1,0 +1,10 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    val x = 42
+    println("x = {}", x)
+    val f = fun (x : int) => x + 1
+    println("f(x) = {}", f(x))
+  end
+end

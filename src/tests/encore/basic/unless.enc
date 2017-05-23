@@ -1,0 +1,9 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    unless 1 == 2 then
+      println("Hello Ponyworld!")
+    end
+  end
+end

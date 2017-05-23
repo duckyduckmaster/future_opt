@@ -1,0 +1,50 @@
+-- This file was automatically converted by encorec
+
+fun pArrayLit[foo, bar](x : bar, y : foo, z : foo) : [bar]
+  [x, x, x]
+end
+fun pArrayAccess[foo](x : foo) : foo
+  let
+    arr = [x, x, x]
+  in
+    arr(0)
+  end
+end
+fun pCreateParametricArray[foo](x : foo) : [foo]
+  new [foo](10)
+end
+fun pCreateTupleContainingArray[a](fst : a, snd : String) : (a, String)
+  (fst, snd)
+end
+fun pExtractParametricArgumentAndCreateArray[t](xs : [t]) : [t]
+  [xs(0)]
+end
+fun pExtractElementFromArray[t](xs : [t]) : t
+  xs(0)
+end
+active class Main
+  def main() : unit
+    val test1 = pArrayLit[int, String]("Test array literals", 42, 12)
+    repeat i <- |test1| do
+      println(test1(i))
+    end
+    val test2 = pArrayAccess[String]("Test array return type within parametric function")
+    println(test2)
+    val test3 = pCreateParametricArray[String]("Test returns empty array of String type")
+    test3(0) = "pCreateParametricArray"
+    println(test3(0))
+    val testPassingArray = pCreateTupleContainingArray[[String]](["Test appending to existing array"], "True!")
+    match testPassingArray with
+      case (fst, snd) =>
+        repeat i <- |fst| do
+          print("{} - {}\n", fst(i), snd)
+        end
+      end
+
+    end
+    val testExtractElement = pExtractElementFromArray[[String]]([["1", "2", "3"]])
+    repeat i <- |testExtractElement| do
+      println(testExtractElement(i))
+    end
+  end
+end

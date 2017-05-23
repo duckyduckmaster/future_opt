@@ -1,0 +1,10 @@
+-- This file was automatically converted by encorec
+
+fun foo(t : (int, int)) : unit
+  ()
+end
+active class Main
+  def main() : unit
+    foo((1, 2, 3))
+  end
+end

@@ -1,0 +1,35 @@
+-- This file was automatically converted by encorec
+
+import ParT.ParT
+fun cmpInt(x : int, y : int) : int
+  if x > y then
+    1
+  else
+    if x < y then
+      -(1)
+    else
+      0
+    end
+  end
+end
+active class T
+  def getValue[sharable t](x : t) : t
+    x
+  end
+  def getPar(x : int) : Par[int]
+    liftv(x)
+  end
+end
+active class Main
+  def testUnion() : unit
+    val p1 = liftf(new T ! getValue(12)) ||| liftf(new T ! getValue(23))
+    val p2 = join(liftf(new T ! getPar(42))) ||| liftv(2) ||| liftv(2) ||| liftv(3)
+    val result = union(p1, p2, cmpInt)
+    for v <- extract(result) do
+      print("Results: {}\n", v)
+    end
+  end
+  def main() : unit
+    this.testUnion()
+  end
+end

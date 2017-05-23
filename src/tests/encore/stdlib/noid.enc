@@ -1,0 +1,18 @@
+class Main
+  def main() : unit
+    val x = false
+    val y = 64
+    assertFalse(x == y)
+
+    val a = new A
+    val b = new B
+    b == a
+
+  end
+end
+
+class A
+end
+
+class B : Id
+end

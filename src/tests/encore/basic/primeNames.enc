@@ -1,0 +1,24 @@
+-- This file was automatically converted by encorec
+
+typedef T' = Bar'
+read trait Bar'
+end
+class Foo'[t'] : T'(m'())
+  var f' : t'
+  def m'(x' : t') : t'
+    x'
+  end
+end
+active class Baz'[t']
+end
+active class Main
+  def main() : unit
+    val foo = new Foo'[int]
+    val baz = new Baz'[Foo'[int]]
+    val x = "This"
+    val x' = "is"
+    val x'' = "prime"
+    val x''' = "stuff!"
+    println("{} {} {} {}", x, x', x'', x''')
+  end
+end

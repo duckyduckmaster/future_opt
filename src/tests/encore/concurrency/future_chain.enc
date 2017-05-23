@@ -1,0 +1,21 @@
+-- This file was automatically converted by encorec
+
+import Task
+active class Producer
+  def produce() : int
+    42 + 1
+  end
+end
+active class Main
+  def main() : unit
+    let
+      p = new Producer
+      l = fun (x : int)
+            println(x)
+            x + 1
+          end
+    in
+      println(get(p ! produce() ~~> l))
+    end
+  end
+end

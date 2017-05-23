@@ -1,0 +1,7 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    println(4 % 3)
+  end
+end

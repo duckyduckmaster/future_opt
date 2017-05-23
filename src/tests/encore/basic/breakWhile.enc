@@ -1,0 +1,30 @@
+read class Foo
+  def bar() : unit
+    var i = 0
+    while i < 50 do
+      print ("{} ",i)
+      if i>5 then
+        break
+        print ("Never show")
+      end
+      i = i + 1
+    end
+  end
+end
+
+active class Main
+  def main() : unit
+    var i = 0
+    while i < 50 do
+      print ("{} ",i)
+      if i>5 then
+        break
+        print ("Never show")
+      end
+      i = i + 1
+    end
+    print ("Done!\n")
+    (new Foo).bar()
+    print ("Done!\n")
+  end
+end

@@ -1,0 +1,28 @@
+-- This file was automatically converted by encorec
+
+active class Main
+  def main() : unit
+    let
+      foo = new Foo(new Bar(2))
+    in
+      foo ! print()
+    end
+  end
+end
+
+active class Foo
+  var x : Bar
+  def init(var x : Bar) : unit
+    this.x = consume x
+  end
+  def print() : unit
+    println(this.x.i)
+  end
+end
+
+linear class Bar
+  var i : int
+  def init(i : int) : unit
+    this.i = i
+  end
+end

@@ -1,0 +1,13 @@
+module RecurseB
+
+import RecurseA
+
+fun bar() : int
+  11
+end
+
+active class Main
+  def main() : unit
+    print("In RecurseB")
+  end
+end

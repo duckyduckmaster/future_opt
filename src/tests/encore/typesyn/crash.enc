@@ -1,0 +1,14 @@
+typedef D = T1 + T2
+local trait T1
+end
+local trait T2
+end
+local trait T3
+end
+class C : D + T3
+end
+active class Main
+  def main() : unit
+    print("crash?")
+  end
+end

@@ -1,0 +1,26 @@
+-- This file was automatically converted by encorec
+
+import Task
+linear class Node
+  var e : int
+  var next : Node
+end
+active class Agent
+  def getNode() : Node
+    var n = new Node
+    n.e = 1
+    consume n
+  end
+  def f() : Node
+    val a = new Agent
+    var n = get(a ! getNode())
+    n.next = new Node
+    consume n
+  end
+end
+active class Main
+  def main() : unit
+    get(new Agent ! f())
+    println(0)
+  end
+end

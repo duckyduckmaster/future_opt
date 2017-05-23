@@ -1,0 +1,20 @@
+fun evilId[t](x : t) : t
+  val theif = new Theif[t]
+  theif ! send([x])
+  x
+end
+
+active class Theif[t]
+  def send(x : [t]) : unit
+    ()
+  end
+end
+
+local class Token
+end
+
+active class Main
+  def main() : unit
+    evilId(new Token)
+  end
+end
