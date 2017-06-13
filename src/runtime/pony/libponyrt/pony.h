@@ -406,8 +406,6 @@ void pony_become(pony_ctx_t* ctx, pony_actor_t* actor);
  */
 void pony_poll(pony_ctx_t* ctx);
 
-void pony_reset_unschedule(pony_actor_t * actor);
-
 #if defined(__cplusplus)
 }
 #endif

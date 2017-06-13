@@ -2,6 +2,7 @@
 #define ENCORE_H_6Q243YHL
 #define _XOPEN_SOURCE 800
 #include <ucontext.h>
+
 #define LAZY_IMPL
 
 // Only useful when using `party_each` on an array.
@@ -109,10 +110,10 @@ struct encore_actor
 {
   pony_actor_pad_t pad;
   // Everything else that goes into an encore_actor that's not part of PonyRT
-  pthread_mutex_t *lock;
   bool resume;
   int await_counter;
   int suspend_counter;
+  pthread_mutex_t *lock;
 #ifndef LAZY_IMPL
   ucontext_t uctx;
   ucontext_t home_uctx;
@@ -151,10 +152,9 @@ void *encore_realloc(pony_ctx_t *ctx, void *p, size_t s);
 /// The starting point of all Encore programs
 int encore_start(int argc, char** argv, pony_type_t *type);
 
-void actor_unlock(encore_actor_t *actor, pony_ctx_t * futctx, void * pony_node);
 bool encore_actor_run_hook(encore_actor_t *actor);
 bool encore_actor_handle_message_hook(encore_actor_t *actor, pony_msg_t* msg);
-void actor_block(pony_ctx_t **ctx, encore_actor_t *actor, void * pony_node);
+void actor_block(pony_ctx_t **ctx, encore_actor_t *actor, void * info_node);
 void actor_set_resume(encore_actor_t *actor);
 
 #ifndef LAZY_IMPL
@@ -162,7 +162,7 @@ void actor_set_run_to_completion(encore_actor_t *actor);
 bool actor_run_to_completion(encore_actor_t *actor);
 #endif
 void actor_suspend();
-void actor_await(pony_ctx_t **ctx, ucontext_t *uctx, void * pony_node);
+void actor_await(pony_ctx_t **ctx, ucontext_t *uctx, void * info_node);
 
 /// calls the pony's respond with the current object's scheduler
 void call_respond_with_current_scheduler();

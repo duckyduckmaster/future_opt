@@ -1,0 +1,26 @@
+import Boxed.Integer
+import Boxed.Char
+import Boxed.Real
+import Boxed.Bool
+import Boxed.Unit
+
+active class Main
+  def main() : unit
+    val maxReal = EMBED (real) 1.7976931348623157E+308; END
+    val minReal = EMBED (real) -1.7976931348623157E+308; END
+    println((new Integer(12)) .show())
+    println((new Integer(-200)) .show())
+    println((new Char('a'))   .show())
+    println((new Real(maxReal)).show())
+    println((new Real(1.234)).show())
+    println((new Real(minReal)).show())
+    println((new Bool(true))   .show())
+    println((new Bool(false))  .show())
+    println((new Unit)         .show())
+
+    assertTrue((new Integer(12)).value() == 12)
+    assertTrue((new Bool(true)).value())
+    assertFalse((new Bool(false)).value())
+    assertTrue((new Real(12.12)).value() > (new Real(6.06)).value())
+  end
+end

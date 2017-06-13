@@ -1,6 +1,7 @@
 #define PONY_WANT_ATOMIC_DEFS
 #define _XOPEN_SOURCE 800
 #include <ucontext.h>
+
 #include "scheduler.h"
 #include "cpu.h"
 #include "mpmcq.h"
@@ -14,11 +15,15 @@
 #include <assert.h>
 #include <signal.h>
 #include "encore.h"
+
 #define SCHED_BATCH 100
+
 static DECLARE_THREAD_FN(run_thread);
+
 extern void unset_unscheduled(pony_actor_t* a);
 extern bool is_unscheduled(pony_actor_t*);
 extern bool pony_reschedule(pony_actor_t *actor);
+
 typedef enum
 {
   SCHED_BLOCK,
@@ -374,14 +379,13 @@ static void __attribute__ ((noreturn)) jump_origin()
 }
 
 __attribute__ ((noreturn))
-void public_run(pony_actor_t *actor, void * pony_node)
+void public_run(pony_actor_t *actor, void * info_node)
 {
   assert(this_scheduler);
-  if (pony_reschedule(actor) ) { //!__atomic_load_n((((encore_actor_t *)actor)->clmfut_popped),__ATOMIC_SEQ_CST)
+  if (pony_reschedule(actor)) {
     push(this_scheduler, actor);
   }
-  actor_unlock((encore_actor_t *)actor, &(this_scheduler->ctx), pony_node);
-  //actor_unlock((encore_actor_t *)actor);
+  handle_future((encore_actor_t *)actor, &(this_scheduler->ctx), info_node);
   run(this_scheduler);
 
   __atomic_fetch_add(&context_waiting, 1, __ATOMIC_RELAXED);
@@ -462,7 +466,7 @@ pony_ctx_t* ponyint_sched_init(uint32_t threads, bool noyield, bool nopin,
   if(threads == 0)
     threads = ponyint_cpu_count();
 
-  scheduler_count = threads;   // change this for sequential analysis
+  scheduler_count = threads;
   scheduler = (scheduler_t*)ponyint_pool_alloc_size(
     scheduler_count * sizeof(scheduler_t));
   memset(scheduler, 0, scheduler_count * sizeof(scheduler_t));

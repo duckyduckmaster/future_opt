@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <dtrace.h>
 #include "encore.h"
+
 #ifdef USE_VALGRIND
 #include <valgrind/helgrind.h>
 #endif
@@ -122,7 +123,7 @@ static bool handle_message(pony_ctx_t** ctx, pony_actor_t* actor,
         assert(ret == 0);
         return !has_flag(actor, FLAG_UNSCHEDULED);
 #else
-        actor->type->dispatch(ctx, actor, __atomic_load_n(&msg, __ATOMIC_SEQ_CST));
+        actor->type->dispatch(ctx, actor, msg);
 #endif
       } else {
         actor->type->dispatch((void*)*ctx, actor, msg);
@@ -498,14 +499,6 @@ bool pony_system_actor(pony_actor_t *actor)
 bool pony_reschedule(pony_actor_t *actor)
 {
   return !has_flag(actor, FLAG_UNSCHEDULED);
-}
-
-void pony_reset_unschedule(pony_actor_t* actor)
-{
-  if(!has_flag(actor, FLAG_UNSCHEDULED))
-    return;
-
-  unset_flag(actor, FLAG_UNSCHEDULED);
 }
 
 // NOTE: (Kiko) The function `pony_poll` is not used by Encore and/or the

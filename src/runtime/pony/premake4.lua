@@ -231,8 +231,8 @@ project "future"
   c_lib()
   links { "closure", "array" }
   files {
-    "../future/**.c",   -- change into "../future/**.c" 
-  }  
+    "../future/**.c",
+  }
 
 project "stream"
   c_lib()

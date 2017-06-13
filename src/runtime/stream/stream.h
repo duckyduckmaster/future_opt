@@ -57,7 +57,6 @@ stream_t *stream_mk(pony_ctx_t **ctx);
 stream_t *stream_put(pony_ctx_t **ctx, stream_t *s, encore_arg_t value,
         pony_type_t *type);
 
-
 /**
  *  Read a value from a stream
  *

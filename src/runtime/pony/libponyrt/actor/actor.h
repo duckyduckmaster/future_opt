@@ -54,8 +54,6 @@ void ponyint_destroy(pony_actor_t* actor);
 
 bool pony_system_actor(pony_actor_t *actor);
 
-void pony_reset_unschedule(pony_actor_t* actor);
-
 PONY_EXTERN_C_END
 
 #endif

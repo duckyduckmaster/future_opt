@@ -27,8 +27,8 @@ typedef struct actor_entry actor_entry_t;
 // Producer -- the actor responsible for fulfilling a future
 // Consumer -- an non-producer actor using a future
 
-static void poly_vanilla_future_block_actor(pony_ctx_t **ctx, poly_vanilla_future_t *fut);
-static void poly_vanilla_future_finalizer(poly_vanilla_future_t *fut);
+static inline void poly_vanilla_future_block_actor(pony_ctx_t **ctx, poly_vanilla_future_t *fut);
+static inline void poly_vanilla_future_finalizer(poly_vanilla_future_t *fut);
 static inline void poly_vanilla_future_gc_send_value(pony_ctx_t *ctx, poly_vanilla_future_t *fut);
 static inline void poly_vanilla_future_gc_recv_value(pony_ctx_t *ctx, poly_vanilla_future_t *fut);
 
@@ -48,7 +48,7 @@ static inline void poly_vanilla_future_gc_trace_value(pony_ctx_t *ctx, poly_vani
   }
 }
 
-static void poly_vanilla_future_finalizer(poly_vanilla_future_t *fut)
+static inline void poly_vanilla_future_finalizer(poly_vanilla_future_t *fut)
 {
   pony_ctx_t* cctx = pony_ctx();
   poly_vanilla_future_gc_recv_value(cctx, fut);
@@ -70,13 +70,6 @@ static inline void poly_vanilla_future_gc_recv_value(pony_ctx_t *ctx, poly_vanil
   ponyint_gc_handlestack(ctx);
 }
 
-typedef struct pony_actor_node {
-  pony_actor_t * actor;
-  ucontext_t *awaited_uctx;
-  int futop;
-  struct pony_actor_node * next;
-} pony_actor_node_t;
-
 /**
 
 poly future methods
@@ -87,27 +80,12 @@ poly_vanilla_future_t *poly_vanilla_future_mk(pony_ctx_t **ctx, pony_type_t *typ
 {
   pony_ctx_t *cctx = *ctx;
   assert(cctx->current);
-
   poly_vanilla_future_t *fut = pony_alloc_final(cctx, sizeof(poly_vanilla_future_t),
           (void *)&poly_vanilla_future_finalizer);
   *fut = (poly_vanilla_future_t) { .type = type, .blocking_stack = NULL };
-
   ENC_DTRACE3(FUTURE_CREATE, (uintptr_t) ctx, (uintptr_t) fut, (uintptr_t) type);
   return fut;
 } 
-
-void poly_vanilla_future_fulfil(pony_ctx_t **ctx, poly_vanilla_future_t *fut, encore_arg_t value) 
-{
-  assert(fut->fulfilled == false);
-  ENC_DTRACE2(FUTURE_FULFIL_START, (uintptr_t) *ctx, (uintptr_t) fut);
-
-  fut->value = value;
-  __atomic_store_n(&(fut->fulfilled), true, __ATOMIC_SEQ_CST);
-  poly_vanilla_future_gc_send_value(*ctx, fut);
-  poly_vanilla_future_discharge(ctx, fut);
-
-  ENC_DTRACE2(FUTURE_FULFIL_END, (uintptr_t) *ctx, (uintptr_t) fut);
-}
 
 encore_arg_t poly_vanilla_future_get_actor(pony_ctx_t **ctx, poly_vanilla_future_t *fut)
 {
@@ -116,42 +94,47 @@ encore_arg_t poly_vanilla_future_get_actor(pony_ctx_t **ctx, poly_vanilla_future
     poly_vanilla_future_block_actor(ctx, fut);
     ENC_DTRACE2(FUTURE_UNBLOCK, (uintptr_t) *ctx, (uintptr_t) fut);
   }
-
   ENC_DTRACE2(FUTURE_GET, (uintptr_t) *ctx, (uintptr_t) fut);
   return fut->value;
 }
 
-static void poly_vanilla_future_block_actor(pony_ctx_t **ctx, poly_vanilla_future_t *fut)
+static inline void poly_vanilla_future_block_actor(pony_ctx_t **ctx, poly_vanilla_future_t *fut)
 {
   perr("future_block_actor");
   if (__atomic_load_n(&(fut->fulfilled), __ATOMIC_SEQ_CST)) {
     return;
   }
-
   pony_ctx_t* cctx = *ctx;
   pony_actor_t *a = cctx->current;
   pony_unschedule(cctx, a);
   encore_actor_t *actor = (encore_actor_t*) a;
-  
-  pony_actor_node_info_t * pony_node = POOL_ALLOC(pony_actor_node_info_t);
-  pony_node->pvfut = fut;
-  pony_node->fclass = POLY_VANILLA_FUTURE;
+  future_tnode_info_t * pony_node = POOL_ALLOC(future_tnode_info_t);
+  *pony_node = (future_tnode_info_t) { .fut = (void*)fut, .fclass = POLY_VANILLA_FUTURE };
   actor_block(ctx, actor, (void *)pony_node);          
 }
 
+void poly_vanilla_future_fulfil(pony_ctx_t **ctx, poly_vanilla_future_t *fut, encore_arg_t value) 
+{
+  assert(fut->fulfilled == false);
+  ENC_DTRACE2(FUTURE_FULFIL_START, (uintptr_t) *ctx, (uintptr_t) fut);
+  fut->value = value;
+  __atomic_store_n(&(fut->fulfilled), true, __ATOMIC_SEQ_CST);
+  poly_vanilla_future_gc_send_value(*ctx, fut);
+  poly_vanilla_future_discharge(ctx, fut);
+  ENC_DTRACE2(FUTURE_FULFIL_END, (uintptr_t) *ctx, (uintptr_t) fut);
+}
+
 void poly_vanilla_future_discharge(pony_ctx_t **ctx, poly_vanilla_future_t *fut) {
-  pony_actor_node_t * a = NULL;
+  future_tnode_t * a = NULL;
   pony_ctx_t * cctx = * ctx;
   encore_actor_t * ea;
-
   a = treiber_stack_pop(&fut->blocking_stack);
   while (a!=NULL) {
       ea = (encore_actor_t *)a->actor; 
       perr("Unblocking");
       actor_set_resume(ea);
       pony_schedule(cctx, a->actor);
-
-      POOL_FREE(pony_actor_node_t, a);
+      POOL_FREE(future_tnode_t, a);
       a = treiber_stack_pop(&fut->blocking_stack);
   }
 }

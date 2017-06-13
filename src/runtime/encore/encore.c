@@ -12,7 +12,6 @@
 #include <ucontext.h>
 #include <stdio.h>
 
-
 #ifdef LAZY_IMPL
 __attribute__ ((noreturn))
 static void actor_resume(encore_actor_t *actor);
@@ -33,7 +32,7 @@ static void actor_resume_context(encore_actor_t *actor, ucontext_t *ctx);
 static void actor_resume_context(encore_actor_t *actor, ucontext_t *ctx);
 #endif
 
-extern void public_run(pony_actor_t *actor);
+extern void public_run(pony_actor_t *actor, void * info_node);
 
 extern bool pony_system_actor(pony_actor_t *actor);
 static void pony_sendargs(pony_ctx_t *ctx, pony_actor_t* to, uint32_t id,
@@ -53,70 +52,6 @@ static __pony_thread_local unsigned int available_context = 0;
 
 __pony_thread_local context *root_context;
 __pony_thread_local context *this_context;
-
-void actor_unlock(encore_actor_t *actor, pony_ctx_t *futctx, void * pony_node)
-{
-  if (!pony_system_actor((pony_actor_t*) actor)) {
-
-    if ( (pony_actor_node_class_info_t *) pony_node != NULL ) { 
-
-      pony_actor_node_info_t * pinfo = (pony_actor_node_info_t *)pony_node;
-
-      if ( pinfo->fclass == FUTURE ) { 
-
-          future_t * fut = pinfo->fut;
-          int futop = pinfo->futop;
-          ucontext_t * aw_uctx = pinfo->awaited_uctx;
-
-          treiber_stack_push(&fut->blocking_stack, (pony_actor_t*)actor, aw_uctx, futop);
-
-          POOL_FREE(pony_actor_node_info_t, (pony_actor_node_info_t *)pony_node);
-
-          if (__atomic_load_n(&fut->fulfilled, __ATOMIC_SEQ_CST)) {
-            future_discharge(&futctx, fut);
-          }
-      
-      } else if (pinfo->fclass == VANILLA_FUTURE ) {
-
-          pony_actor_node_info_t * pinfo = (pony_actor_node_info_t *)pony_node;
-
-          vanilla_future_t * vfut = pinfo->vfut;
-          vfut->actor = (pony_actor_t *)actor;
-          __atomic_store_n(pinfo->on_stack, true, __ATOMIC_SEQ_CST);
-
-          if (__atomic_load_n(pinfo->fulfilled, __ATOMIC_SEQ_CST)) {
-            vanilla_future_discharge_consumer(&futctx, pinfo->on_stack, actor);
-          }
-          POOL_FREE(pony_actor_node_info_t, pinfo);
-
-      } if ( pinfo->fclass == POLY_VANILLA_FUTURE ) { 
-
-          poly_vanilla_future_t * fut = pinfo->pvfut;
-
-          treiber_stack_push(&fut->blocking_stack, (pony_actor_t*)actor, NULL, 0);
-
-          POOL_FREE(pony_actor_node_info_t, (pony_actor_node_info_t *)pony_node);
-
-          if (__atomic_load_n(&fut->fulfilled, __ATOMIC_SEQ_CST)) {
-            poly_vanilla_future_discharge(&futctx, fut);
-          }
-      
-      } else if (pinfo->fclass == SINGLE_CHAIN_FUTURE ) {
-          pony_actor_node_info_t * pinfo = (pony_actor_node_info_t *)pony_node;
-
-          single_chain_future_t * scfut = pinfo->scfut;
-          scfut->actor = (pony_actor_t *)actor;
-          __atomic_store_n(pinfo->on_stack, true, __ATOMIC_SEQ_CST);
-
-          if (__atomic_load_n(pinfo->fulfilled, __ATOMIC_SEQ_CST)) {
-            single_chain_future_discharge_consumer(&futctx, scfut);
-          }
-          POOL_FREE(pony_actor_node_info_t, pinfo);
-      }
-      
-    } 
-  }
-}
 
 #ifndef LAZY_IMPL
 
@@ -175,7 +110,7 @@ bool actor_run_to_completion(encore_actor_t *actor)
 
 #ifdef LAZY_IMPL
 
-static context *pop_context(encore_actor_t *actor, void * pony_node)
+static context *pop_context(encore_actor_t *actor, void * info_node)
 {
   context *c;
   if (available_context == 0) {
@@ -196,7 +131,7 @@ static context *pop_context(encore_actor_t *actor, void * pony_node)
     context_pool->uctx.uc_stack.ss_flags = 0;
 #endif
   }
-  makecontext(&context_pool->uctx, (void(*)(void))public_run, 2, actor, pony_node);
+  makecontext(&context_pool->uctx, (void(*)(void))public_run, 2, actor, info_node);
   c = context_pool;
   context_pool = c->next;
   return c;
@@ -252,7 +187,7 @@ static void force_thread_local_variable_access(context *old_this_context,
 #endif
 
 void actor_save_context(pony_ctx_t **ctx, encore_actor_t *actor,
-        ucontext_t *uctx, void * pony_node)
+        ucontext_t *uctx, void * info_node)
 {
 #ifndef LAZY_IMPL
 
@@ -275,7 +210,7 @@ void actor_save_context(pony_ctx_t **ctx, encore_actor_t *actor,
   context *old_this_context = this_context;
   context *old_root_context = root_context;
   encore_actor_t *old_actor = actor;
-  this_context = pop_context(actor, pony_node);
+  this_context = pop_context(actor, info_node);
   assert_swap(uctx, &this_context->uctx);
 #if defined(PLATFORM_IS_MACOSX)
   force_thread_local_variable_access(old_this_context, old_root_context);
@@ -289,19 +224,19 @@ void actor_save_context(pony_ctx_t **ctx, encore_actor_t *actor,
   *ctx = pony_ctx(); // Context might have gone stale, update it
 }
 
-void actor_block(pony_ctx_t **ctx, encore_actor_t *actor, void * pony_node)
+void actor_block(pony_ctx_t **ctx, encore_actor_t *actor, void * info_node)
 {
 
 #ifndef LAZY_IMPL
-  actor_save_context(ctx, actor, &actor->uctx, pony_node);
+  actor_save_context(ctx, actor, &actor->uctx, info_node);
 #else
   actor->saved = &this_context->uctx;
-  actor_save_context(ctx, actor, actor->saved, pony_node);
+  actor_save_context(ctx, actor, actor->saved, info_node);
 #endif
 
 }
 
-void actor_suspend(pony_ctx_t **ctx, void * pony_node)
+void actor_suspend(pony_ctx_t **ctx)
 {
   encore_actor_t *actor = (encore_actor_t*)(*ctx)->current;
   actor->suspend_counter++;
@@ -309,18 +244,18 @@ void actor_suspend(pony_ctx_t **ctx, void * pony_node)
   ucontext_t uctx;
   pony_sendp(*ctx, (pony_actor_t*) actor, _ENC__MSG_RESUME_SUSPEND, &uctx);
 
-  actor_save_context(ctx, actor, &uctx, pony_node);
+  actor_save_context(ctx, actor, &uctx, NULL);
 
   actor->suspend_counter--;
   assert(actor->suspend_counter >= 0);
 }
 
-void actor_await(pony_ctx_t **ctx, ucontext_t *uctx, void * pony_node)
+void actor_await(pony_ctx_t **ctx, ucontext_t *uctx, void * info_node)
 {
   encore_actor_t *actor = (encore_actor_t*)(*ctx)->current;
   actor->await_counter++;
 
-  actor_save_context(ctx, actor, uctx, pony_node);
+  actor_save_context(ctx, actor, uctx, info_node);
 
   actor->await_counter--;
 
